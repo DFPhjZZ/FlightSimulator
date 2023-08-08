@@ -134,7 +134,15 @@ public class Aircraft : MonoBehaviour
     bool cannonFiring;
     float cannonDebounceTimer;
     float cannonFiringTimer;
-
+    
+    [Header("Surfaces")]
+    public List<AircraftControlSurface> elevators;
+    public AircraftControlSurface aileronLeft;
+    public AircraftControlSurface aileronRight;
+    public List<AircraftControlSurface> rudders;
+    // public List<AircraftWing> wings;
+    // private Vector3 TotalLiftForce;
+    
     public float MaxHealth
     {
         get
@@ -594,7 +602,29 @@ public class Aircraft : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (elevators != null)
+        {
+            foreach (var elevator in elevators)
+            {
+                elevator.targetDeflection = controlInput.z;
+            }
+        }
+        if (aileronLeft != null)
+        {
+            aileronLeft.targetDeflection = -controlInput.x;
+        }
+        if (aileronRight != null)
+        {
+            aileronRight.targetDeflection = controlInput.x;
+        }
 
+        if (rudders != null)
+        {
+            foreach (var rudder in rudders)
+            {
+                rudder.targetDeflection = controlInput.y;
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -613,7 +643,7 @@ public class Aircraft : MonoBehaviour
         {
             //apply updates
             UpdateThrust();
-            UpdateLift();
+            // UpdateLift();
             UpdateSteering(dt);
         }
         else
@@ -623,13 +653,19 @@ public class Aircraft : MonoBehaviour
             Rb.rotation = Quaternion.LookRotation(deadForward, deadUp);
         }
 
-        UpdateDrag();
-        UpdateAngularDrag();
+        // UpdateDrag();
+        // UpdateAngularDrag();
 
         //calculate again, so that other systems can read this plane's state
         CalculateState(dt);
 
         UpdateWeapons(dt);
+        
+        // foreach (var wing in wings)
+        // {
+        //     TotalLiftForce += wing.actualLiftForce;
+        // }
+        // Debug.Log("Total Lift Force: " + TotalLiftForce);
     }
 
     void OnCollisionEnter(Collision collision)
