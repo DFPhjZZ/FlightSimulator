@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RayFire;
 
 public class Missile : MonoBehaviour {
     [SerializeField]
@@ -26,7 +27,8 @@ public class Missile : MonoBehaviour {
     // Target target;
     bool exploded;
     Vector3 lastPosition;
-    float timer;
+    float timer; 
+    RayfireBomb rayFireBomb;
 
     public Rigidbody Rigidbody { get; private set; }
 
@@ -35,7 +37,8 @@ public class Missile : MonoBehaviour {
         // this.target = target;
 
         Rigidbody = GetComponent<Rigidbody>();
-
+        rayFireBomb = GetComponent<RayfireBomb>();
+        
         lastPosition = Rigidbody.position;
         timer = lifetime;
 
@@ -60,6 +63,8 @@ public class Missile : MonoBehaviour {
             //     other.ApplyDamage(damage);
             // }
         }
+        
+        rayFireBomb.Explode(0.0f);
 
         // if (target != null) target.NotifyMissileLaunched(this, false);
     }
@@ -80,6 +85,8 @@ public class Missile : MonoBehaviour {
             //     Rigidbody.position = hit.point;
             //     Explode();
             // }
+            Rigidbody.position = hit.point;
+            Explode();
         }
 
         lastPosition = currentPosition;

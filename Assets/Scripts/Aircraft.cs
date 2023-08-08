@@ -280,11 +280,9 @@ public class Aircraft : MonoBehaviour
         if (Dead) return;
 
         //try all available missiles
-        for (int i = 0; i < hardpoints.Count; i++)
-        {
+        for (int i = 0; i < hardpoints.Count; i++) {
             var index = (missileIndex + i) % hardpoints.Count;
-            if (missileDebounceTimer == 0 && missileReloadTimers[index] == 0)
-            {
+            if (missileDebounceTimer == 0 && missileReloadTimers[index] == 0) {
                 FireMissile(index);
 
                 missileIndex = (index + 1) % hardpoints.Count;

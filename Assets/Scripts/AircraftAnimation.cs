@@ -74,7 +74,6 @@ public class AircraftAnimation : MonoBehaviour
     }
 
     public void ShowMissileGraphic(int index, bool visible) {
-        Debug.Log(visible);
         missileGraphics[index].SetActive(visible);
     }
 
