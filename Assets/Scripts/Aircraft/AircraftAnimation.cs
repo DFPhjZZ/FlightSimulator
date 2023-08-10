@@ -145,7 +145,7 @@ public class AircraftAnimation : MonoBehaviour
         if (!aircraft.Dead)
         {
             UpdateAfterburners();
-            UpdateControlSurfaces(dt);
+            // UpdateControlSurfaces(dt);
             UpdateAirbrakes(dt);
             UpdateFlaps(dt);
         }

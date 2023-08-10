@@ -87,8 +87,8 @@ public class AircraftWing : MonoBehaviour
 		}
 
 		// If needed, uncomment these two lines 
-		// liftMultiplier *= 2.0f;
-		// dragMultiplier *= 0.5f;
+		// liftMultiplier *= 4.0f;
+		// dragMultiplier *= 0.25f;
 	}
 
 	private void Update()
@@ -115,6 +115,8 @@ public class AircraftWing : MonoBehaviour
 
 			Vector3 localVelocity = transform.InverseTransformDirection(rigid.GetPointVelocity(transform.position));
 			localVelocity.x = 0f;
+			
+			// Debug.Log("Local Velocity: " + localVelocity + " Rigid Velocity: " + rigid.velocity);
 
 			// Angle of attack is used as the look up for the lift and drag curves.
 			angleOfAttack = Vector3.Angle(Vector3.forward, localVelocity);

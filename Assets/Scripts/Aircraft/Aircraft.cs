@@ -134,12 +134,15 @@ public class Aircraft : MonoBehaviour
     bool cannonFiring;
     float cannonDebounceTimer;
     float cannonFiringTimer;
+
+    private bool inWindArea;
+    private WindArea windArea;
     
     [Header("Surfaces")]
-    public List<AircraftControlSurface> elevators;
-    public AircraftControlSurface aileronLeft;
-    public AircraftControlSurface aileronRight;
-    public List<AircraftControlSurface> rudders;
+    public List<ControlSurface> elevators;
+    public ControlSurface aileronLeft;
+    public ControlSurface aileronRight;
+    public List<ControlSurface> rudders;
     // public List<AircraftWing> wings;
     // private Vector3 TotalLiftForce;
     
@@ -389,7 +392,7 @@ public class Aircraft : MonoBehaviour
     {
         if (LocalVelocity.z > flapsRetractSpeed)
         {
-            FlapsDeployed = false;
+            // FlapsDeployed = false;
         }
     }
 
@@ -606,16 +609,16 @@ public class Aircraft : MonoBehaviour
         {
             foreach (var elevator in elevators)
             {
-                elevator.targetDeflection = controlInput.z;
+                elevator.targetDeflection = controlInput.x;
             }
         }
         if (aileronLeft != null)
         {
-            aileronLeft.targetDeflection = -controlInput.x;
+            aileronLeft.targetDeflection = -controlInput.z;
         }
         if (aileronRight != null)
         {
-            aileronRight.targetDeflection = controlInput.x;
+            aileronRight.targetDeflection = controlInput.z;
         }
 
         if (rudders != null)
@@ -631,6 +634,11 @@ public class Aircraft : MonoBehaviour
     {
         float dt = Time.fixedDeltaTime;
 
+        if (inWindArea)
+        {
+            Rb.AddForce(windArea.Direction * windArea.Strength);
+        }
+        
         //calculate at start, to capture any changes that happened externally
         CalculateState(dt);
         CalculateGForce(dt);
@@ -644,7 +652,7 @@ public class Aircraft : MonoBehaviour
             //apply updates
             UpdateThrust();
             // UpdateLift();
-            UpdateSteering(dt);
+            // UpdateSteering(dt);
         }
         else
         {
@@ -666,6 +674,25 @@ public class Aircraft : MonoBehaviour
         //     TotalLiftForce += wing.actualLiftForce;
         // }
         // Debug.Log("Total Lift Force: " + TotalLiftForce);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "WindArea")
+        {
+            Debug.Log("Enter");
+            inWindArea = true;
+            windArea = other.gameObject.GetComponent<WindArea>();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "WindArea")
+        {
+            inWindArea = false;
+            windArea = null;
+        }
     }
 
     void OnCollisionEnter(Collision collision)
