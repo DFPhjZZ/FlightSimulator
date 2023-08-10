@@ -607,7 +607,7 @@ MonoBehaviour:
   flapsLiftPower: 150
   flapsAOABias: 0.5
   flapsDrag: 5
-  flapsRetractSpeed: 125
+  flapsRetractSpeed: 150
   turnSpeed: {x: 30, y: 15, z: 270}
   turnAcceleration: {x: 60, y: 30, z: 540}
   steeringCurve:

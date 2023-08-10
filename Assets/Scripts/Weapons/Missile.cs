@@ -24,12 +24,12 @@ public class Missile : MonoBehaviour {
     GameObject explosionGraphic;
 
     Aircraft owner;
-    // Target target;
     bool exploded;
     Vector3 lastPosition;
     float timer; 
     RayfireBomb rayFireBomb;
 
+    public GameObject target { get; set; }
     public Rigidbody Rigidbody { get; private set; }
 
     public void Launch(Aircraft owner) {
@@ -87,32 +87,33 @@ public class Missile : MonoBehaviour {
             // }
             Rigidbody.position = hit.point;
             Explode();
+            owner.target = null;
         }
 
         lastPosition = currentPosition;
     }
 
-    // void TrackTarget(float dt) {
-    //     if (target == null) return;
-    //
-    //     var targetPosition = Utilities.FirstOrderIntercept(Rigidbody.position, Vector3.zero, speed, target.Position, target.Velocity);
-    //
-    //     var error = targetPosition - Rigidbody.position;
-    //     var targetDir = error.normalized;
-    //     var currentDir = Rigidbody.rotation * Vector3.forward;
-    //
-    //     //if angle to target is too large, explode
-    //     if (Vector3.Angle(currentDir, targetDir) > trackingAngle) {
-    //         Explode();
-    //         return;
-    //     }
-    //
-    //     //calculate turning rate from G Force and speed
-    //     float maxTurnRate = (turningGForce * 9.81f) / speed;  //radians / s
-    //     var dir = Vector3.RotateTowards(currentDir, targetDir, maxTurnRate * dt, 0);
-    //
-    //     Rigidbody.rotation = Quaternion.LookRotation(dir);
-    // }
+    void TrackTarget(float dt) {
+        if (target == null) return;
+    
+        var targetPosition = Utilities.FirstOrderIntercept(Rigidbody.position, Vector3.zero, speed, target.transform.position, target.GetComponent<Rigidbody>().velocity);
+    
+        var error = targetPosition - Rigidbody.position;
+        var targetDir = error.normalized;
+        var currentDir = Rigidbody.rotation * Vector3.forward;
+    
+        //if angle to target is too large, explode
+        // if (Vector3.Angle(currentDir, targetDir) > trackingAngle) {
+        //     Explode();
+        //     return;
+        // }
+    
+        //calculate turning rate from G Force and speed
+        float maxTurnRate = (turningGForce * 9.81f) / speed;  //radians / s
+        var dir = Vector3.RotateTowards(currentDir, targetDir, maxTurnRate * dt, 0);
+    
+        Rigidbody.rotation = Quaternion.LookRotation(dir);
+    }
 
     void FixedUpdate() {
         timer = Mathf.Max(0, timer - Time.fixedDeltaTime);
@@ -130,7 +131,7 @@ public class Missile : MonoBehaviour {
         if (exploded) return;
 
         CheckCollision();
-        // TrackTarget(Time.fixedDeltaTime);
+        TrackTarget(Time.fixedDeltaTime);
 
         //set speed to direction of travel
         Rigidbody.velocity = Rigidbody.rotation * new Vector3(0, 0, speed);

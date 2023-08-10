@@ -35,8 +35,8 @@ public class AircraftHUD : MonoBehaviour
     Bar healthBar;
     [SerializeField]
     Text healthText;
-    // [SerializeField]
-    // Transform targetBox;
+    [SerializeField]
+    Transform targetBox;
     // [SerializeField]
     // Text targetName;
     // [SerializeField]
@@ -49,21 +49,21 @@ public class AircraftHUD : MonoBehaviour
     // RectTransform reticleLine;
     // [SerializeField]
     // RectTransform targetArrow;
-    [SerializeField]
-    RectTransform missileArrow;
+    // [SerializeField]
+    // RectTransform missileArrow;
     // [SerializeField]
     // float targetArrowThreshold;
-    [SerializeField]
-    float missileArrowThreshold;
-    [SerializeField]
-    float cannonRange;
-    [SerializeField]
-    float bulletSpeed;
-    [SerializeField]
-    GameObject aiMessage;
-
-    [SerializeField]
-    List<Graphic> missileWarningGraphics;
+    // [SerializeField]
+    // float missileArrowThreshold;
+    // [SerializeField]
+    // float cannonRange;
+    // [SerializeField]
+    // float bulletSpeed;
+    // [SerializeField]
+    // GameObject aiMessage;
+    //
+    // [SerializeField]
+    // List<Graphic> missileWarningGraphics;
 
     Aircraft aircraft;
     Transform aircraftTransform;
@@ -72,8 +72,8 @@ public class AircraftHUD : MonoBehaviour
 
     GameObject hudCenterGO;
     GameObject velocityMarkerGO;
-    // GameObject targetBoxGO;
-    // Image targetBoxImage;
+    GameObject targetBoxGO;
+    Image targetBoxImage;
     // GameObject missileLockGO;
     // Image missileLockImage;
     // GameObject reticleGO;
@@ -88,8 +88,8 @@ public class AircraftHUD : MonoBehaviour
     void Start() {
         hudCenterGO = hudCenter.gameObject;
         velocityMarkerGO = velocityMarker.gameObject;
-        // targetBoxGO = targetBox.gameObject;
-        // targetBoxImage = targetBox.GetComponent<Image>();
+        targetBoxGO = targetBox.gameObject;
+        targetBoxImage = targetBox.GetComponent<Image>();
         // missileLockGO = missileLock.gameObject;
         // missileLockImage = missileLock.GetComponent<Image>();
         // reticleGO = reticle.gameObject;
@@ -197,6 +197,36 @@ public class AircraftHUD : MonoBehaviour
     void UpdateHealth() {
         healthBar.SetValue(aircraft.Health / aircraft.MaxHealth);
         healthText.text = string.Format("{0:0}", aircraft.Health);
+    }
+
+    void UpdateWeapon()
+    {
+        targetBoxImage.color = normalColor;
+        var velocity = aircraftTransform.forward;
+        if (aircraft.LocalVelocity.sqrMagnitude > 1) {
+            velocity = aircraft.Rb.velocity;
+        }
+        var targetBoxPos = TransformToHUDSpace(cameraTransform.position + velocity);
+        if (targetBoxPos.z > 0)
+        {
+            targetBoxGO.SetActive(true);
+            targetBox.localPosition = new Vector3(targetBoxPos.x, targetBoxPos.y, 0);
+        }
+        else 
+        {
+            targetBoxGO.SetActive(false);
+        }
+
+        if (aircraft.target != null)
+        {
+            var targetPos = TransformToHUDSpace(aircraft.target.position);
+            if (targetPos.z > 0)
+            {
+                targetBoxImage.color = lockColor;
+                targetBox.localPosition = new Vector3(targetPos.x, targetPos.y, 0);
+            }
+        }
+
     }
 
     // void UpdateWeapons() {
@@ -330,6 +360,7 @@ public class AircraftHUD : MonoBehaviour
         UpdateAirspeed();
         UpdateAltitude();
         UpdateHealth();
+        UpdateWeapon();
         // UpdateWeapons();
         // UpdateWarnings();
 

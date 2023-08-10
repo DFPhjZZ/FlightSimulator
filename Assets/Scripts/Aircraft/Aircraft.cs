@@ -145,6 +145,9 @@ public class Aircraft : MonoBehaviour
     public List<ControlSurface> rudders;
     // public List<AircraftWing> wings;
     // private Vector3 TotalLiftForce;
+
+    private GameObject[] hostileObjects;
+    private Camera cam;
     
     public float MaxHealth
     {
@@ -196,6 +199,8 @@ public class Aircraft : MonoBehaviour
     public float AngleOfAttack { get; private set; }
     public float AngleOfAttackYaw { get; private set; }
     public bool AirbrakeDeployed { get; private set; }
+    
+    public Transform target { get; set; }
 
     public bool FlapsDeployed
     {
@@ -266,6 +271,9 @@ public class Aircraft : MonoBehaviour
         missileLockDirection = Vector3.forward;
 
         Rb.velocity = Rb.rotation * new Vector3(0, 0, initialSpeed);
+
+        hostileObjects = GameObject.FindGameObjectsWithTag("Hostile");
+        cam = GetComponent<Camera>();
     }
 
     public void SetThrottleInput(float input)
@@ -311,6 +319,10 @@ public class Aircraft : MonoBehaviour
         var hardpoint = hardpoints[index];
         var missileGO = Instantiate(missilePrefab, hardpoint.position, hardpoint.rotation);
         var missile = missileGO.GetComponent<Missile>();
+        if (target != null)
+        {
+            missile.target = target.gameObject;
+        }
         missile.Launch(this);
     }
 
@@ -392,7 +404,7 @@ public class Aircraft : MonoBehaviour
     {
         if (LocalVelocity.z > flapsRetractSpeed)
         {
-            // FlapsDeployed = false;
+            FlapsDeployed = false;
         }
     }
 
@@ -627,6 +639,18 @@ public class Aircraft : MonoBehaviour
             {
                 rudder.targetDeflection = controlInput.y;
             }
+        }
+
+        // Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
+        foreach (var potential_hostile in hostileObjects)
+        {
+            if (// GeometryUtility.TestPlanesAABB(planes, potential_hostile.GetComponent<MeshRenderer>().bounds) &&
+                potential_hostile != null && potential_hostile.active)
+            {
+                target = potential_hostile.transform;
+                break;
+            }
+        
         }
     }
 

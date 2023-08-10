@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - WindArea
+  - Hostile
   layers:
   - Default
   - TransparentFX
