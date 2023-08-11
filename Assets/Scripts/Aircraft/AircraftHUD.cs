@@ -202,11 +202,8 @@ public class AircraftHUD : MonoBehaviour
     void UpdateWeapon()
     {
         targetBoxImage.color = normalColor;
-        var velocity = aircraftTransform.forward;
-        if (aircraft.LocalVelocity.sqrMagnitude > 1) {
-            velocity = aircraft.Rb.velocity;
-        }
-        var targetBoxPos = TransformToHUDSpace(cameraTransform.position + velocity);
+        var rotation = cameraTransform.localEulerAngles;
+        var targetBoxPos = TransformToHUDSpace(cameraTransform.position + aircraftTransform.forward);
         if (targetBoxPos.z > 0)
         {
             targetBoxGO.SetActive(true);

@@ -49,9 +49,9 @@ public class AircraftCamera : MonoBehaviour
         // camera = GetComponent<Camera>();
         cameraTransform = camera.GetComponent<Transform>();
         
-        craftInput = new CraftInput();
-        craftInput.Aircraft.Camera.performed += ctx=> cameraInput = ctx.ReadValue<Vector2>();
-        craftInput.Aircraft.Camera.canceled += ctx => cameraInput = Vector2.zero;
+        // craftInput = new CraftInput();
+        // craftInput.Aircraft.Camera.performed += ctx=> cameraInput = ctx.ReadValue<Vector2>();
+        // craftInput.Aircraft.Camera.canceled += ctx => cameraInput = Vector2.zero;
     }
 
     void Start()
@@ -131,7 +131,27 @@ public class AircraftCamera : MonoBehaviour
             cameraTransform.localRotation = rotation;
             cameraTransform.localPosition = pos;
         }
-        
+
+        var tempPos = cameraTransform.position;
+        var aircraft2Cam = (cameraTransform.position - aircraft.transform.position).normalized;
+        Ray ray = new Ray(aircraft.transform.position, aircraft2Cam);
+        RaycastHit hit;
+        bool flag = Physics.Raycast(ray, out hit);
+        if (flag && hit.transform.gameObject.tag != "MainCamera")
+        {
+            cameraTransform.position = hit.point;
+            if (Vector3.Distance(hit.point, aircraft.transform.position) > distance)
+            {
+                var dist = (hit.point - aircraft.transform.position).normalized;
+                cameraTransform.position = aircraft.transform.position + distance * dist;
+            }
+        }
+        else
+        {
+            cameraTransform.position = aircraft.transform.position + (tempPos - aircraft.transform.position).normalized * distance;
+        }
+
+
         // Attempt 07
         // var currentLookAngle = cameraInput;
         // if (currentLookAngle.magnitude > 1f) currentLookAngle = currentLookAngle.normalized;
@@ -157,7 +177,7 @@ public class AircraftCamera : MonoBehaviour
         //     cameraTransform.localRotation = rotation;
         //         prevRot = rotation;
         // }
-        
+
         // original
         // var cameraOffset = this.cameraOffset;
         // // Debug.Log("input: " + cameraInput + " magnitude: " + cameraInput.magnitude);
@@ -192,14 +212,5 @@ public class AircraftCamera : MonoBehaviour
         //
         // cameraTransform.localPosition = rotation * turningRotation * cameraOffset;
         // cameraTransform.localRotation = rotation * turningRotation;
-    }
-
-    private float ClampAngle(float angle, float min, float max)
-    {
-        if (angle < -360.0f)
-            angle += 360.0f;
-        if (angle > 360.0f)
-            angle -= 360.0f;
-        return Mathf.Clamp(angle, min, max);
     }
 }

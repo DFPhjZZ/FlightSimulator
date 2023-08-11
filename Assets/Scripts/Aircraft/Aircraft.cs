@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RayFire;
+using Random = System.Random;
 
 public class Aircraft : MonoBehaviour
 {
@@ -95,6 +96,14 @@ public class Aircraft : MonoBehaviour
     [SerializeField]
     GameObject missilePrefab;
     [SerializeField]
+    float missileMaxLockDistance;
+    [SerializeField]
+    float missileLockAngleYZ;
+    [SerializeField]
+    float missileLockAngleXZ;
+    [SerializeField]
+    float missileLockVerticalOffset;
+    [SerializeField]
     RayfireGun rayFireGun;
     [SerializeField]
     Transform rayFireGunTarget;
@@ -146,7 +155,8 @@ public class Aircraft : MonoBehaviour
     // public List<AircraftWing> wings;
     // private Vector3 TotalLiftForce;
 
-    private GameObject[] hostileObjects;
+    public List<Hostile> hostileObjects;
+    private Plane[] missileLockPlanes;
     private Camera cam;
     
     public float MaxHealth
@@ -261,19 +271,17 @@ public class Aircraft : MonoBehaviour
             landingGearDefaultMaterial = landingGear[0].sharedMaterial;
         }
 
+        // Initiate Missile Timer
         missileReloadTimers = new List<float>(hardpoints.Count);
-
         foreach (var h in hardpoints)
         {
             missileReloadTimers.Add(0);
         }
-
         missileLockDirection = Vector3.forward;
 
         Rb.velocity = Rb.rotation * new Vector3(0, 0, initialSpeed);
-
-        hostileObjects = GameObject.FindGameObjectsWithTag("Hostile");
-        cam = GetComponent<Camera>();
+        
+        cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
 
     public void SetThrottleInput(float input)
@@ -641,17 +649,34 @@ public class Aircraft : MonoBehaviour
             }
         }
 
-        // Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
-        foreach (var potential_hostile in hostileObjects)
+        if (cam == null) Debug.Log("ASD");
+        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
+        Random rnd = new Random();
+        Hostile potientialHostile;
+        while (true && hostileObjects.Count != 0 && target == null)
         {
-            if (// GeometryUtility.TestPlanesAABB(planes, potential_hostile.GetComponent<MeshRenderer>().bounds) &&
-                potential_hostile != null && potential_hostile.active)
+            int idx = rnd.Next(0, hostileObjects.Count - 1);
+            var potentialHostile = hostileObjects[idx];
+            if (potentialHostile != null && potentialHostile.gameObject.active &&
+                GeometryUtility.TestPlanesAABB(planes, potentialHostile.GetComponent<MeshRenderer>().bounds)
+                && Vector3.Distance(potentialHostile.transform.position, transform.position) <= missileMaxLockDistance)
             {
-                target = potential_hostile.transform;
+                target = potentialHostile.transform;
                 break;
             }
-        
         }
+        // foreach (var potential_hostile in hostileObjects)
+        // {
+        //     if (
+        //         potential_hostile != null && potential_hostile.gameObject.active && GeometryUtility.TestPlanesAABB(planes, potential_hostile.GetComponent<MeshRenderer>().bounds)
+        //         && Vector3.Distance(potential_hostile.transform.position, transform.position) <= missileMaxLockDistance)
+        //     {
+        //         target = potential_hostile.transform;
+        //         break;
+        //     }
+        //
+        // }
+
     }
 
     private void FixedUpdate()

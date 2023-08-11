@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,9 +29,16 @@ public class Missile : MonoBehaviour {
     Vector3 lastPosition;
     float timer; 
     RayfireBomb rayFireBomb;
+    private float maxDistance;
+    private float minDistance = 10.0f;
 
     public GameObject target { get; set; }
     public Rigidbody Rigidbody { get; private set; }
+
+    private void Awake()
+    {
+        maxDistance = speed * lifetime;
+    }
 
     public void Launch(Aircraft owner) {
         this.owner = owner;
@@ -115,6 +123,20 @@ public class Missile : MonoBehaviour {
         Rigidbody.rotation = Quaternion.LookRotation(dir);
     }
 
+    void TrackTarget()
+    {
+        if (target == null) return;
+
+        var leadTimePercentage = Mathf.InverseLerp(minDistance, maxDistance,
+            Vector3.Distance(transform.position, target.gameObject.transform.position));
+        var predictionTime = Mathf.Lerp(0, lifetime, leadTimePercentage);
+        Vector3 prediction = target.GetComponent<Rigidbody>().position + target.GetComponent<Rigidbody>().velocity *
+                             predictionTime;
+        var heading = prediction - transform.position;
+        var rotation = Quaternion.LookRotation(heading);
+        Rigidbody.MoveRotation(Quaternion.RotateTowards(transform.rotation, rotation, 90f * Time.fixedDeltaTime));
+    }
+
     void FixedUpdate() {
         timer = Mathf.Max(0, timer - Time.fixedDeltaTime);
 
@@ -131,7 +153,8 @@ public class Missile : MonoBehaviour {
         if (exploded) return;
 
         CheckCollision();
-        TrackTarget(Time.fixedDeltaTime);
+        //TrackTarget(Time.fixedDeltaTime);
+        TrackTarget();
 
         //set speed to direction of travel
         Rigidbody.velocity = Rigidbody.rotation * new Vector3(0, 0, speed);
