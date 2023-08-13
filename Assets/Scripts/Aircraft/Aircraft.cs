@@ -146,7 +146,7 @@ public class Aircraft : MonoBehaviour
 
     private bool inWindArea;
     private WindArea windArea;
-    
+
     [Header("Surfaces")]
     public List<ControlSurface> elevators;
     public ControlSurface aileronLeft;
@@ -158,7 +158,7 @@ public class Aircraft : MonoBehaviour
     public List<Hostile> hostileObjects;
     private Plane[] missileLockPlanes;
     private Camera cam;
-    
+
     public float MaxHealth
     {
         get
@@ -209,7 +209,7 @@ public class Aircraft : MonoBehaviour
     public float AngleOfAttack { get; private set; }
     public float AngleOfAttackYaw { get; private set; }
     public bool AirbrakeDeployed { get; private set; }
-    
+
     public Transform target { get; set; }
 
     public bool FlapsDeployed
@@ -280,7 +280,7 @@ public class Aircraft : MonoBehaviour
         missileLockDirection = Vector3.forward;
 
         Rb.velocity = Rb.rotation * new Vector3(0, 0, initialSpeed);
-        
+
         cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
 
@@ -307,9 +307,11 @@ public class Aircraft : MonoBehaviour
         if (Dead) return;
 
         //try all available missiles
-        for (int i = 0; i < hardpoints.Count; i++) {
+        for (int i = 0; i < hardpoints.Count; i++)
+        {
             var index = (missileIndex + i) % hardpoints.Count;
-            if (missileDebounceTimer == 0 && missileReloadTimers[index] == 0) {
+            if (missileDebounceTimer == 0 && missileReloadTimers[index] == 0)
+            {
                 FireMissile(index);
 
                 missileIndex = (index + 1) % hardpoints.Count;
@@ -649,11 +651,10 @@ public class Aircraft : MonoBehaviour
             }
         }
 
-        if (cam == null) Debug.Log("ASD");
         Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
         Random rnd = new Random();
         Hostile potientialHostile;
-        while (true && hostileObjects.Count != 0 && target == null)
+        if (hostileObjects.Count != 0 && target == null)
         {
             int idx = rnd.Next(0, hostileObjects.Count - 1);
             var potentialHostile = hostileObjects[idx];
@@ -662,7 +663,6 @@ public class Aircraft : MonoBehaviour
                 && Vector3.Distance(potentialHostile.transform.position, transform.position) <= missileMaxLockDistance)
             {
                 target = potentialHostile.transform;
-                break;
             }
         }
         // foreach (var potential_hostile in hostileObjects)
@@ -687,7 +687,7 @@ public class Aircraft : MonoBehaviour
         {
             Rb.AddForce(windArea.Direction * windArea.Strength);
         }
-        
+
         //calculate at start, to capture any changes that happened externally
         CalculateState(dt);
         CalculateGForce(dt);
@@ -717,7 +717,7 @@ public class Aircraft : MonoBehaviour
         CalculateState(dt);
 
         UpdateWeapons(dt);
-        
+
         // foreach (var wing in wings)
         // {
         //     TotalLiftForce += wing.actualLiftForce;

@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RayFire;
 
-public class Missile : MonoBehaviour {
+public class Missile : MonoBehaviour
+{
     [SerializeField]
     float lifetime;
     [SerializeField]
@@ -27,7 +28,7 @@ public class Missile : MonoBehaviour {
     Aircraft owner;
     bool exploded;
     Vector3 lastPosition;
-    float timer; 
+    float timer;
     RayfireBomb rayFireBomb;
     private float maxDistance;
     private float minDistance = 10.0f;
@@ -40,20 +41,22 @@ public class Missile : MonoBehaviour {
         maxDistance = speed * lifetime;
     }
 
-    public void Launch(Aircraft owner) {
+    public void Launch(Aircraft owner)
+    {
         this.owner = owner;
         // this.target = target;
 
         Rigidbody = GetComponent<Rigidbody>();
         rayFireBomb = GetComponent<RayfireBomb>();
-        
+
         lastPosition = Rigidbody.position;
         timer = lifetime;
 
         // if (target!= null) target.NotifyMissileLaunched(this, true);
     }
 
-    void Explode() {
+    void Explode()
+    {
         if (exploded) return;
 
         timer = lifetime;
@@ -64,20 +67,22 @@ public class Missile : MonoBehaviour {
 
         var hits = Physics.OverlapSphere(Rigidbody.position, damageRadius, collisionMask.value);
 
-        foreach (var hit in hits) {
+        foreach (var hit in hits)
+        {
             // Aircraft other = hit.gameObject.GetComponent<Aircraft>();
             //
             // if (other != null && other != owner) {
             //     other.ApplyDamage(damage);
             // }
         }
-        
+
         rayFireBomb.Explode(0.0f);
 
         // if (target != null) target.NotifyMissileLaunched(this, false);
     }
 
-    void CheckCollision() {
+    void CheckCollision()
+    {
         //missile can travel very fast, collision may not be detected by physics system
         //use raycasts to check for collisions
 
@@ -86,7 +91,8 @@ public class Missile : MonoBehaviour {
         var ray = new Ray(lastPosition, error.normalized);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, error.magnitude, collisionMask.value)) {
+        if (Physics.Raycast(ray, out hit, error.magnitude, collisionMask.value))
+        {
             // Aircraft other = hit.collider.gameObject.GetComponent<Aircraft>();
             //
             // if (other == null || other != owner) {
@@ -101,25 +107,26 @@ public class Missile : MonoBehaviour {
         lastPosition = currentPosition;
     }
 
-    void TrackTarget(float dt) {
+    void TrackTarget(float dt)
+    {
         if (target == null) return;
-    
+
         var targetPosition = Utilities.FirstOrderIntercept(Rigidbody.position, Vector3.zero, speed, target.transform.position, target.GetComponent<Rigidbody>().velocity);
-    
+
         var error = targetPosition - Rigidbody.position;
         var targetDir = error.normalized;
         var currentDir = Rigidbody.rotation * Vector3.forward;
-    
+
         //if angle to target is too large, explode
         // if (Vector3.Angle(currentDir, targetDir) > trackingAngle) {
         //     Explode();
         //     return;
         // }
-    
+
         //calculate turning rate from G Force and speed
         float maxTurnRate = (turningGForce * 9.81f) / speed;  //radians / s
         var dir = Vector3.RotateTowards(currentDir, targetDir, maxTurnRate * dt, 0);
-    
+
         Rigidbody.rotation = Quaternion.LookRotation(dir);
     }
 
@@ -137,15 +144,20 @@ public class Missile : MonoBehaviour {
         Rigidbody.MoveRotation(Quaternion.RotateTowards(transform.rotation, rotation, 90f * Time.fixedDeltaTime));
     }
 
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
         timer = Mathf.Max(0, timer - Time.fixedDeltaTime);
 
         //explode missile automatically after lifetime ends
         //timer is reused to keep missile graphics alive after explosion
-        if (timer == 0) {
-            if (exploded) {
+        if (timer == 0)
+        {
+            if (exploded)
+            {
                 Destroy(gameObject);
-            } else {
+            }
+            else
+            {
                 Explode();
             }
         }
@@ -153,7 +165,7 @@ public class Missile : MonoBehaviour {
         if (exploded) return;
 
         CheckCollision();
-        //TrackTarget(Time.fixedDeltaTime);
+        // TrackTarget(Time.fixedDeltaTime);
         TrackTarget();
 
         //set speed to direction of travel
