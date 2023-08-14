@@ -32,6 +32,7 @@ public class Missile : MonoBehaviour
     RayfireBomb rayFireBomb;
     private float maxDistance;
     private float minDistance = 50.0f;
+    private Transform hitTransform;
 
     public GameObject target { get; set; }
     public Rigidbody Rigidbody { get; private set; }
@@ -67,29 +68,30 @@ public class Missile : MonoBehaviour
 
         var hits = Physics.OverlapSphere(Rigidbody.position, damageRadius, collisionMask.value);
 
-        foreach (var hit in hits)
-        {
-            // Aircraft other = hit.gameObject.GetComponent<Aircraft>();
-            //
-            // if (other != null && other != owner) {
-            //     other.ApplyDamage(damage);
-            // }
-        }
+        //foreach (var hit in hits)
+        //{
+        //    Aircraft other = hit.gameObject.GetComponent<Aircraft>();
+
+        //    if (other != null && other != owner)
+        //    {
+        //        other.ApplyDamage(damage);
+        //    }
+        //}
 
         rayFireBomb.Explode(0.0f);
-        if (target != null)
+        if (hitTransform != null && hitTransform.gameObject.tag == "hostile")
         {
-            var rfr = target.GetComponent<RayfireRigid>();
-            RayfireRigid[] subRigids = target.GetComponentsInChildren<RayfireRigid>();
-            if (rfr != null)
+            if (target != null)
             {
-                rfr.Demolish();
-                foreach (var sb in subRigids)
+                var rfr = target.GetComponent<RayfireRigid>();
+                RayfireRigid[] subRigids = target.GetComponentsInChildren<RayfireRigid>();
+                if (rfr != null)
                 {
-                    sb.Demolish();
+                    rfr.Demolish();
                 }
+                target = null;
             }
-            target = null;
+            hitTransform = null;
         }
 
         // if (target != null) target.NotifyMissileLaunched(this, false);
@@ -114,6 +116,7 @@ public class Missile : MonoBehaviour
             //     Explode();
             // }
             Rigidbody.position = hit.point;
+            hitTransform = hit.transform;
             Explode();
             owner.target = null;
         }
