@@ -46,7 +46,6 @@ public class AircraftCamera : MonoBehaviour
     
     void Awake()
     {
-        // camera = GetComponent<Camera>();
         cameraTransform = camera.GetComponent<Transform>();
         
         // craftInput = new CraftInput();
@@ -83,29 +82,27 @@ public class AircraftCamera : MonoBehaviour
     {
         cameraInput = input;
     }
-    
-    
 
     // Update is called once per frame
     void Update()
     {
-        if (cameraInput != Vector2.zero)
-        {
-            resetTimer = 0.0f;
-        }
-        else
-        {
-            resetTimer += Time.deltaTime;
-            if (resetTimer > mouseStopThreshold)
-            {
-                // xAngle = Mathf.Lerp(xAngle, defaultXAngle, Time.deltaTime);
-                // yAngle = Mathf.Lerp(yAngle, defaultYAngle, Time.deltaTime);
-                
-                // cameraTransform.rotation = Quaternion.Lerp(cameraTransform.rotation, cameraTransform.rotation * aircraftTransform.rotation, Time.deltaTime);
-                // cameraTransform.position = Vector3.Lerp(cameraTransform.position,
-                //     aircraft.transform.position + cameraOffset, Time.deltaTime);
-            }
-        }
+        // if (cameraInput != Vector2.zero)
+        // {
+        //     resetTimer = 0.0f;
+        // }
+        // else
+        // {
+        //     resetTimer += Time.deltaTime;
+        //     if (resetTimer > mouseStopThreshold)
+        //     {
+        //         xAngle = Mathf.Lerp(xAngle, defaultXAngle, Time.deltaTime);
+        //         yAngle = Mathf.Lerp(yAngle, defaultYAngle, Time.deltaTime);
+        //         
+        //         cameraTransform.rotation = Quaternion.Lerp(cameraTransform.rotation, cameraTransform.rotation * aircraftTransform.rotation, Time.deltaTime);
+        //         cameraTransform.position = Vector3.Lerp(cameraTransform.position,
+        //             aircraft.transform.position + cameraOffset, Time.deltaTime);
+        //     }
+        // }
     }
 
     private void LateUpdate()

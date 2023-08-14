@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1599728676907636795}
   - component: {fileID: 6059171085048846624}
   - component: {fileID: 8989285927099122372}
+  - component: {fileID: 8630961621831877403}
   m_Layer: 0
   m_Name: Guns
   m_TagString: Untagged
@@ -83,6 +84,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &8630961621831877403
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334487148667466522}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300004, guid: a2e2dc37c1fdbdd419db3632766d70aa, type: 3}
 --- !u!1 &4696397037138481257
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,6 +121,7 @@ GameObject:
   - component: {fileID: 4576176779898932519}
   - component: {fileID: 6149346292314995413}
   - component: {fileID: 2980751170798503622}
+  - component: {fileID: 8631202051736444837}
   m_Layer: 0
   m_Name: Missile Launcher
   m_TagString: Untagged
@@ -119,7 +143,7 @@ Transform:
   m_Children:
   - {fileID: 4774077333518774452}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 193.475, z: 0}
 --- !u!33 &7136696888034605120
 MeshFilter:
@@ -206,7 +230,7 @@ MonoBehaviour:
     materialType: 4
     material: {fileID: 0}
     massBy: 0
-    mass: 100
+    mass: 1
     colliderType: 0
     planarCheck: 1
     useGravity: 1
@@ -217,7 +241,7 @@ MonoBehaviour:
   activation:
     byVelocity: 0
     byOffset: 0
-    byDamage: 500
+    byDamage: 0
     byActivator: 0
     byImpact: 0
     byConnectivity: 0
@@ -239,7 +263,7 @@ MonoBehaviour:
     depthFade: 0.5
     contactBias: 0
     seed: 1
-    useShatter: 0
+    useShatter: 1
     meshInput: 9
     properties:
       colliderType: 0
@@ -482,6 +506,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aircraft: {fileID: 0}
   maxDistance: 2000
+--- !u!64 &8631202051736444837
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4696397037138481257}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: a2e2dc37c1fdbdd419db3632766d70aa, type: 3}
 --- !u!1 &5283054375674137958
 GameObject:
   m_ObjectHideFlags: 0
@@ -493,6 +539,7 @@ GameObject:
   - component: {fileID: 4774077333518774452}
   - component: {fileID: 7397513985526773181}
   - component: {fileID: 3222077789117250263}
+  - component: {fileID: 1416935921396714084}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -566,3 +613,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &1416935921396714084
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5283054375674137958}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300002, guid: a2e2dc37c1fdbdd419db3632766d70aa, type: 3}

@@ -108,6 +108,12 @@ public class CraftController : MonoBehaviour {
             aircraft.TryFireMissile();
         }
     }
+
+    public void OnLandingGear(InputAction.CallbackContext context)
+    {
+        aircraft.landingGearDown = !aircraft.landingGearDown;
+        aircraft.landingGearStatus = true;
+    }
     
     // public void OnFlapsInput(InputAction.CallbackContext context) {
     //     if (plane == null) return;

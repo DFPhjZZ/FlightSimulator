@@ -45,6 +45,9 @@ public class AircraftAnimation : MonoBehaviour
     Vector3 deflection;
     float airbrakePosition;
     float flapsPosition;
+    Quaternion landingGearUp = Quaternion.Euler(90f, 0f, 0f);
+    Quaternion landingGearDown = Quaternion.Euler(0f, 0f, 0f);
+    private Quaternion landingGearTargetQuaternion;
 
     void Start() {
         aircraft = GetComponent<Aircraft>();
@@ -102,25 +105,6 @@ public class AircraftAnimation : MonoBehaviour
         }
     }
 
-    void UpdateControlSurfaces(float dt) {
-        var input = aircraft.EffectiveInput;
-
-        deflection.x = Utilities.MoveTo(deflection.x, input.x, deflectionSpeed, dt, -1, 1);
-        deflection.y = Utilities.MoveTo(deflection.y, input.y, deflectionSpeed, dt, -1, 1);
-        deflection.z = Utilities.MoveTo(deflection.z, input.z, deflectionSpeed, dt, -1, 1);
-
-        rightAileron.localRotation = CalculatePose(rightAileron, Quaternion.Euler(deflection.z * maxAileronDeflection, 0, 0));
-        leftAileron.localRotation = CalculatePose(leftAileron, Quaternion.Euler(-deflection.z * maxAileronDeflection, 0, 0));
-
-        foreach (var t in elevators) {
-            t.localRotation = CalculatePose(t, Quaternion.Euler(deflection.x * maxElevatorDeflection, 0, 0));
-        }
-
-        foreach (var t in rudders) {
-            t.localRotation = CalculatePose(t, Quaternion.Euler(0, -deflection.y * maxRudderDeflection, 0));
-        }
-    }
-
     void UpdateAirbrakes(float dt) {
         var target = aircraft.AirbrakeDeployed ? 1 : 0;
 
@@ -139,15 +123,31 @@ public class AircraftAnimation : MonoBehaviour
         }
     }
 
+    void UpdateLandingGears()
+    {
+        if (!aircraft.landingGearStatus) return;
+        if (!aircraft.landingGearDown) landingGearTargetQuaternion = landingGearUp;
+        else landingGearTargetQuaternion = landingGearDown;
+        foreach (var lg in aircraft.landingGearModels)
+        {
+            // lg.localRotation = Quaternion.RotateTowards(lg.localRotation, Quaternion.Euler(landingGearRotationAngle, 0f, 0f), 90f);
+            lg.localRotation = Quaternion.Slerp(lg.localRotation, landingGearTargetQuaternion, Time.fixedDeltaTime);
+            if (lg.localRotation == landingGearTargetQuaternion)
+            {
+                aircraft.landingGearStatus = false;
+            }
+        }
+    }
+
     void LateUpdate() {
         float dt = Time.deltaTime;
 
         if (!aircraft.Dead)
         {
             UpdateAfterburners();
-            // UpdateControlSurfaces(dt);
             UpdateAirbrakes(dt);
             UpdateFlaps(dt);
+            UpdateLandingGears();
         }
     }
 }

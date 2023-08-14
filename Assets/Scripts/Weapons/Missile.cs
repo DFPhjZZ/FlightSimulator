@@ -31,7 +31,7 @@ public class Missile : MonoBehaviour
     float timer;
     RayfireBomb rayFireBomb;
     private float maxDistance;
-    private float minDistance = 10.0f;
+    private float minDistance = 50.0f;
 
     public GameObject target { get; set; }
     public Rigidbody Rigidbody { get; private set; }
@@ -77,6 +77,20 @@ public class Missile : MonoBehaviour
         }
 
         rayFireBomb.Explode(0.0f);
+        if (target != null)
+        {
+            var rfr = target.GetComponent<RayfireRigid>();
+            RayfireRigid[] subRigids = target.GetComponentsInChildren<RayfireRigid>();
+            if (rfr != null)
+            {
+                rfr.Demolish();
+                foreach (var sb in subRigids)
+                {
+                    sb.Demolish();
+                }
+            }
+            target = null;
+        }
 
         // if (target != null) target.NotifyMissileLaunched(this, false);
     }
@@ -137,8 +151,9 @@ public class Missile : MonoBehaviour
         var leadTimePercentage = Mathf.InverseLerp(minDistance, maxDistance,
             Vector3.Distance(transform.position, target.gameObject.transform.position));
         var predictionTime = Mathf.Lerp(0, lifetime, leadTimePercentage);
-        Vector3 prediction = target.GetComponent<Rigidbody>().position + target.GetComponent<Rigidbody>().velocity *
-                             predictionTime;
+        // Vector3 prediction = target.GetComponent<Rigidbody>().position + target.GetComponent<Rigidbody>().velocity *
+        //                      predictionTime;
+        Vector3 prediction = target.transform.position;
         var heading = prediction - transform.position;
         var rotation = Quaternion.LookRotation(heading);
         Rigidbody.MoveRotation(Quaternion.RotateTowards(transform.rotation, rotation, 90f * Time.fixedDeltaTime));

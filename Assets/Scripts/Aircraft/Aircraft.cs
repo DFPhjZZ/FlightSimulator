@@ -20,59 +20,11 @@ public class Aircraft : MonoBehaviour
     [SerializeField]
     float gLimitPitch;
 
-    [Header("Lift")]
-    [SerializeField]
-    float liftPower;
-    [SerializeField]
-    AnimationCurve liftAOACurve;
-    [SerializeField]
-    float inducedDrag;
-    [SerializeField]
-    AnimationCurve inducedDragCurve;
-    [SerializeField]
-    float rudderPower;
-    [SerializeField]
-    AnimationCurve rudderAOACurve;
-    [SerializeField]
-    AnimationCurve rudderInducedDragCurve;
-    [SerializeField]
-    float flapsLiftPower;
-    [SerializeField]
-    float flapsAOABias;
-    [SerializeField]
-    float flapsDrag;
-    [SerializeField]
-    float flapsRetractSpeed;
-
-    [Header("Steering")]
-    [SerializeField]
-    Vector3 turnSpeed;
-    [SerializeField]
-    Vector3 turnAcceleration;
-    [SerializeField]
-    AnimationCurve steeringCurve;
-
-    [Header("Drag")]
-    [SerializeField]
-    AnimationCurve dragForward;
-    [SerializeField]
-    AnimationCurve dragBack;
-    [SerializeField]
-    AnimationCurve dragLeft;
-    [SerializeField]
-    AnimationCurve dragRight;
-    [SerializeField]
-    AnimationCurve dragTop;
-    [SerializeField]
-    AnimationCurve dragBottom;
-    [SerializeField]
-    Vector3 angularDrag;
-    [SerializeField]
-    float airbrakeDrag;
-
     [Header("Misc")]
     [SerializeField]
     List<Collider> landingGear;
+    [SerializeField]
+    public List<Transform> landingGearModels;
     [SerializeField]
     PhysicMaterial landingGearBrakesMaterial;
     [SerializeField]
@@ -85,6 +37,8 @@ public class Aircraft : MonoBehaviour
     bool flapsDeployed;
     [SerializeField]
     float initialSpeed;
+    [SerializeField]
+    float flapsRetractSpeed;
 
     [Header("Weapons")]
     [SerializeField]
@@ -98,23 +52,9 @@ public class Aircraft : MonoBehaviour
     [SerializeField]
     float missileMaxLockDistance;
     [SerializeField]
-    float missileLockAngleYZ;
-    [SerializeField]
-    float missileLockAngleXZ;
-    [SerializeField]
-    float missileLockVerticalOffset;
-    [SerializeField]
     RayfireGun rayFireGun;
     [SerializeField]
     Transform rayFireGunTarget;
-    // [SerializeField]
-    // Target target;
-    // [SerializeField]
-    // float lockRange;
-    // [SerializeField]
-    // float lockSpeed;
-    // [SerializeField]
-    // float lockAngle;
     [SerializeField]
     [Tooltip("Firing rate in Rounds Per Minute")]
     float cannonFireRate;
@@ -126,6 +66,12 @@ public class Aircraft : MonoBehaviour
     Transform cannonSpawnPoint;
     [SerializeField]
     GameObject bulletPrefab;
+    
+    [Header("Surfaces")]
+    public List<ControlSurface> elevators;
+    public ControlSurface aileronLeft;
+    public ControlSurface aileronRight;
+    public List<ControlSurface> rudders;
 
     new AircraftAnimation animation;
 
@@ -133,8 +79,8 @@ public class Aircraft : MonoBehaviour
     Vector3 controlInput;
 
     Vector3 lastVelocity;
-    PhysicMaterial landingGearDefaultMaterial;
 
+    // Weapons
     int missileIndex;
     List<float> missileReloadTimers;
     float missileDebounceTimer;
@@ -146,18 +92,11 @@ public class Aircraft : MonoBehaviour
 
     private bool inWindArea;
     private WindArea windArea;
-
-    [Header("Surfaces")]
-    public List<ControlSurface> elevators;
-    public ControlSurface aileronLeft;
-    public ControlSurface aileronRight;
-    public List<ControlSurface> rudders;
-    // public List<AircraftWing> wings;
-    // private Vector3 TotalLiftForce;
-
-    public List<Hostile> hostileObjects;
+    
     private Plane[] missileLockPlanes;
     private Camera cam;
+    
+    PhysicMaterial landingGearDefaultMaterial;
 
     public float MaxHealth
     {
@@ -201,7 +140,6 @@ public class Aircraft : MonoBehaviour
 
     public Rigidbody Rb { get; private set; }
     public float Throttle { get; private set; }
-    public Vector3 EffectiveInput { get; private set; }
     public Vector3 Velocity { get; private set; }
     public Vector3 LocalVelocity { get; private set; }
     public Vector3 LocalGForce { get; private set; }
@@ -221,11 +159,6 @@ public class Aircraft : MonoBehaviour
         private set
         {
             flapsDeployed = value;
-
-            foreach (var lg in landingGear)
-            {
-                lg.enabled = value;
-            }
         }
     }
 
@@ -245,19 +178,15 @@ public class Aircraft : MonoBehaviour
         }
     }
 
-    public bool MissileLocked { get; private set; }
-    public bool MissileTracking { get; private set; }
-    // public Target Target {
-    //     get {
-    //         return target;
-    //     }
-    // }
-    public Vector3 MissileLockDirection
+    public List<Hostile> hostileObjects { get; set; }
+    public bool landingGearDown { get; set; }
+    public bool landingGearStatus { get; set; }
+
+    private void Awake()
     {
-        get
-        {
-            return Rb.rotation * missileLockDirection;
-        }
+        landingGearDown = true;
+        landingGearStatus = false;
+        hostileObjects = new List<Hostile>();
     }
 
     // Start is called before the first frame update
@@ -468,78 +397,7 @@ public class Aircraft : MonoBehaviour
     {
         Rb.AddRelativeForce(Throttle * maxThrust * Vector3.forward);
     }
-
-    void UpdateDrag()
-    {
-        var lv = LocalVelocity;
-        var lv2 = lv.sqrMagnitude;  //velocity squared
-
-        float airbrakeDrag = AirbrakeDeployed ? this.airbrakeDrag : 0;
-        float flapsDrag = FlapsDeployed ? this.flapsDrag : 0;
-
-        //calculate coefficient of drag depending on direction on velocity
-        var coefficient = Utilities.Scale6(
-            lv.normalized,
-            dragRight.Evaluate(Mathf.Abs(lv.x)), dragLeft.Evaluate(Mathf.Abs(lv.x)),
-            dragTop.Evaluate(Mathf.Abs(lv.y)), dragBottom.Evaluate(Mathf.Abs(lv.y)),
-            dragForward.Evaluate(Mathf.Abs(lv.z)) + airbrakeDrag + flapsDrag,   //include extra drag for forward coefficient
-            dragBack.Evaluate(Mathf.Abs(lv.z))
-        );
-
-        var drag = coefficient.magnitude * lv2 * -lv.normalized;    //drag is opposite direction of velocity
-
-        Rb.AddRelativeForce(drag);
-    }
-
-    Vector3 CalculateLift(float angleOfAttack, Vector3 rightAxis, float liftPower, AnimationCurve aoaCurve, AnimationCurve inducedDragCurve)
-    {
-        var liftVelocity = Vector3.ProjectOnPlane(LocalVelocity, rightAxis);    //project velocity onto YZ plane
-        var v2 = liftVelocity.sqrMagnitude;                                     //square of velocity
-
-        //lift = velocity^2 * coefficient * liftPower
-        //coefficient varies with AOA
-        var liftCoefficient = aoaCurve.Evaluate(angleOfAttack * Mathf.Rad2Deg);
-        var liftForce = v2 * liftCoefficient * liftPower;
-
-        //lift is perpendicular to velocity
-        var liftDirection = Vector3.Cross(liftVelocity.normalized, rightAxis);
-        var lift = liftDirection * liftForce;
-
-        //induced drag varies with square of lift coefficient
-        var dragForce = liftCoefficient * liftCoefficient;
-        var dragDirection = -liftVelocity.normalized;
-        var inducedDrag = dragDirection * v2 * dragForce * this.inducedDrag * inducedDragCurve.Evaluate(Mathf.Max(0, LocalVelocity.z));
-
-        return lift + inducedDrag;
-    }
-
-    void UpdateLift()
-    {
-        if (LocalVelocity.sqrMagnitude < 1f) return;
-
-        float flapsLiftPower = FlapsDeployed ? this.flapsLiftPower : 0;
-        float flapsAOABias = FlapsDeployed ? this.flapsAOABias : 0;
-
-        var liftForce = CalculateLift(
-            AngleOfAttack + (flapsAOABias * Mathf.Deg2Rad), Vector3.right,
-            liftPower + flapsLiftPower,
-            liftAOACurve,
-            inducedDragCurve
-        );
-
-        var yawForce = CalculateLift(AngleOfAttackYaw, Vector3.up, rudderPower, rudderAOACurve, rudderInducedDragCurve);
-
-        Rb.AddRelativeForce(liftForce);
-        Rb.AddRelativeForce(yawForce);
-    }
-
-    void UpdateAngularDrag()
-    {
-        var av = LocalAngularVelocity;
-        var drag = av.sqrMagnitude * -av.normalized;    //squared, opposite direction of angular velocity
-        Rb.AddRelativeTorque(Vector3.Scale(drag, angularDrag), ForceMode.Acceleration);  //ignore rigidbody mass
-    }
-
+    
     Vector3 CalculateGForce(Vector3 angularVelocity, Vector3 velocity)
     {
         //estiamte G Force from angular velocity and velocity
@@ -584,46 +442,25 @@ public class Aircraft : MonoBehaviour
         return 1;
     }
 
-    float CalculateSteering(float dt, float angularVelocity, float targetVelocity, float acceleration)
+    Bounds CalculateBounds(Transform parent)
     {
-        var error = targetVelocity - angularVelocity;
-        var accel = acceleration * dt;
-        return Mathf.Clamp(error, -accel, accel);
+        Vector3 center = Vector3.zero;
+        Renderer[] renderers = parent.GetComponentsInChildren<Renderer>();
+        foreach (var renderer in renderers)
+        {
+            center += renderer.bounds.center;
+        }
+        center /= parent.GetComponentsInChildren<Transform>().Length;
+
+        Bounds bounds = new Bounds(center, Vector3.zero);
+        foreach (var renderer in renderers)
+        {
+            bounds.Encapsulate(renderer.bounds);
+        }
+
+        return bounds;
     }
-
-    void UpdateSteering(float dt)
-    {
-        var speed = Mathf.Max(0, LocalVelocity.z);
-        var steeringPower = steeringCurve.Evaluate(speed);
-
-        var gForceScaling = CalculateGLimiter(controlInput, turnSpeed * Mathf.Deg2Rad * steeringPower);
-
-        var targetAV = Vector3.Scale(controlInput, turnSpeed * steeringPower * gForceScaling);
-        var av = LocalAngularVelocity * Mathf.Rad2Deg;
-
-        var correction = new Vector3(
-            CalculateSteering(dt, av.x, targetAV.x, turnAcceleration.x * steeringPower),
-            CalculateSteering(dt, av.y, targetAV.y, turnAcceleration.y * steeringPower),
-            CalculateSteering(dt, av.z, targetAV.z, turnAcceleration.z * steeringPower)
-        );
-
-        Rb.AddRelativeTorque(correction * Mathf.Deg2Rad, ForceMode.VelocityChange);    //ignore rigidbody mass
-
-        var correctionInput = new Vector3(
-            Mathf.Clamp((targetAV.x - av.x) / turnAcceleration.x, -1, 1),
-            Mathf.Clamp((targetAV.y - av.y) / turnAcceleration.y, -1, 1),
-            Mathf.Clamp((targetAV.z - av.z) / turnAcceleration.z, -1, 1)
-        );
-
-        var effectiveInput = (correctionInput + controlInput) * gForceScaling;
-
-        EffectiveInput = new Vector3(
-            Mathf.Clamp(effectiveInput.x, -1, 1),
-            Mathf.Clamp(effectiveInput.y, -1, 1),
-            Mathf.Clamp(effectiveInput.z, -1, 1)
-        );
-    }
-
+    
     // Update is called once per frame
     void Update()
     {
@@ -653,30 +490,18 @@ public class Aircraft : MonoBehaviour
 
         Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
         Random rnd = new Random();
-        Hostile potientialHostile;
+        // if (hostileObjects.Count != 0) Debug.Log("Hostiles In Range: " + hostileObjects.Count);
         if (hostileObjects.Count != 0 && target == null)
         {
             int idx = rnd.Next(0, hostileObjects.Count - 1);
             var potentialHostile = hostileObjects[idx];
             if (potentialHostile != null && potentialHostile.gameObject.active &&
-                GeometryUtility.TestPlanesAABB(planes, potentialHostile.GetComponent<MeshRenderer>().bounds)
+                GeometryUtility.TestPlanesAABB(planes, CalculateBounds(potentialHostile.transform))
                 && Vector3.Distance(potentialHostile.transform.position, transform.position) <= missileMaxLockDistance)
             {
                 target = potentialHostile.transform;
             }
         }
-        // foreach (var potential_hostile in hostileObjects)
-        // {
-        //     if (
-        //         potential_hostile != null && potential_hostile.gameObject.active && GeometryUtility.TestPlanesAABB(planes, potential_hostile.GetComponent<MeshRenderer>().bounds)
-        //         && Vector3.Distance(potential_hostile.transform.position, transform.position) <= missileMaxLockDistance)
-        //     {
-        //         target = potential_hostile.transform;
-        //         break;
-        //     }
-        //
-        // }
-
     }
 
     private void FixedUpdate()
@@ -700,8 +525,6 @@ public class Aircraft : MonoBehaviour
         {
             //apply updates
             UpdateThrust();
-            // UpdateLift();
-            // UpdateSteering(dt);
         }
         else
         {
@@ -709,20 +532,11 @@ public class Aircraft : MonoBehaviour
             Vector3 deadForward = Rb.velocity.normalized;
             Rb.rotation = Quaternion.LookRotation(deadForward, deadUp);
         }
-
-        // UpdateDrag();
-        // UpdateAngularDrag();
-
+        
         //calculate again, so that other systems can read this plane's state
         CalculateState(dt);
 
         UpdateWeapons(dt);
-
-        // foreach (var wing in wings)
-        // {
-        //     TotalLiftForce += wing.actualLiftForce;
-        // }
-        // Debug.Log("Total Lift Force: " + TotalLiftForce);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -746,27 +560,27 @@ public class Aircraft : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        //for (int i = 0; i < collision.contactCount; i++)
-        //{
-        //    var contact = collision.contacts[i];
+        for (int i = 0; i < collision.contactCount; i++)
+        {
+            var contact = collision.contacts[i];
 
-        //    if (landingGear.Contains(contact.thisCollider))
-        //    {
-        //        return;
-        //    }
+            if (landingGear.Contains(contact.thisCollider) || collision.gameObject.tag == "Destroyable")
+            {
+                return;
+            }
 
-        //    Health = 0;
+            Health = 0;
 
-        //    Rb.isKinematic = true;
-        //    Rb.position = contact.point;
-        //    Rb.rotation = Quaternion.Euler(0, Rb.rotation.eulerAngles.y, 0);
+            Rb.isKinematic = true;
+            Rb.position = contact.point;
+            Rb.rotation = Quaternion.Euler(0, Rb.rotation.eulerAngles.y, 0);
 
-        //    foreach (var go in graphics)
-        //    {
-        //        go.SetActive(false);
-        //    }
+            foreach (var go in graphics)
+            {
+                go.SetActive(false);
+            }
 
-        //    return;
-        //}
+            return;
+        }
     }
 }
