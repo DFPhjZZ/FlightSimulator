@@ -36,7 +36,7 @@ public class Aircraft : MonoBehaviour
     [SerializeField]
     bool flapsDeployed;
     [SerializeField]
-    float initialSpeed;
+    float initialSpeed = 500f;
     [SerializeField]
     float flapsRetractSpeed;
 
@@ -148,7 +148,7 @@ public class Aircraft : MonoBehaviour
     public float AngleOfAttackYaw { get; private set; }
     public bool AirbrakeDeployed { get; private set; }
 
-    public Transform target { get; set; }
+    public Hostile target { get; set; }
 
     public bool FlapsDeployed
     {
@@ -260,7 +260,7 @@ public class Aircraft : MonoBehaviour
         var missile = missileGO.GetComponent<Missile>();
         if (target != null)
         {
-            missile.target = target.gameObject;
+            missile.target = target;
         }
         missile.Launch(this);
     }
@@ -499,7 +499,7 @@ public class Aircraft : MonoBehaviour
                 GeometryUtility.TestPlanesAABB(planes, CalculateBounds(potentialHostile.transform))
                 && Vector3.Distance(potentialHostile.transform.position, transform.position) <= missileMaxLockDistance)
             {
-                target = potentialHostile.transform;
+                target = potentialHostile;
             }
         }
     }

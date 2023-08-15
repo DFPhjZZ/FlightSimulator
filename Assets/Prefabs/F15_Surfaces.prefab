@@ -398,15 +398,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dimensions: {x: 4, y: 11}
   applyForcesToCenter: 1
+  isMainWing: 0
   lift:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.030859169
+      outSlope: 0.030859169
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -415,16 +416,16 @@ MonoBehaviour:
       value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 90
       value: 0
-      inSlope: -0.022222223
-      outSlope: -0.022222223
-      tangentMode: 136
+      inSlope: -0.029043932
+      outSlope: -0.029043932
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -433,16 +434,16 @@ MonoBehaviour:
       value: -1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 180
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.03238003
+      outSlope: 0.03238003
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -482,8 +483,25 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  testL:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  testD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   liftMultiplier: 1
   dragMultiplier: 1
+  liftCoefficient: 0
+  dragCoefficient: 0
+  liftForce: 0
+  dragForce: 0
+  angleOfAttack: 0
   actualLiftForce: {x: 0, y: 0, z: 0}
 --- !u!1 &335909241646175078
 GameObject:
@@ -981,6 +999,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dimensions: {x: 1, y: 2.5}
   applyForcesToCenter: 1
+  isMainWing: 0
   lift:
     serializedVersion: 2
     m_Curve:
@@ -1065,8 +1084,25 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  testL:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  testD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   liftMultiplier: 1
   dragMultiplier: 1
+  liftCoefficient: 0
+  dragCoefficient: 0
+  liftForce: 0
+  dragForce: 0
+  angleOfAttack: 0
   actualLiftForce: {x: 0, y: 0, z: 0}
 --- !u!1 &886909814124656323
 GameObject:
@@ -1249,6 +1285,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dimensions: {x: 10, y: 4}
   applyForcesToCenter: 1
+  isMainWing: 1
   lift:
     serializedVersion: 2
     m_Curve:
@@ -1342,15 +1379,24 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0.025
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.0016872095
+      outSlope: 0.0016872095
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 49.982094
+      value: 1.0759575
+      inSlope: 0.028721027
+      outSlope: 0.028721027
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 90
-      value: 2
+      value: 1.8
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -1360,17 +1406,34 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 180
       value: 0.025
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: -0.0015598722
+      outSlope: -0.0015598722
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  testL:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  testD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   liftMultiplier: 1
   dragMultiplier: 1
+  liftCoefficient: 0
+  dragCoefficient: 0
+  liftForce: 0
+  dragForce: 0
+  angleOfAttack: 0
   actualLiftForce: {x: 0, y: 0, z: 0}
 --- !u!1 &1477862470378892225
 GameObject:
@@ -1418,15 +1481,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dimensions: {x: 4.5, y: 2}
   applyForcesToCenter: 0
+  isMainWing: 0
   lift:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.030859169
+      outSlope: 0.030859169
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -1435,16 +1499,16 @@ MonoBehaviour:
       value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 90
       value: 0
-      inSlope: -0.022222223
-      outSlope: -0.022222223
-      tangentMode: 136
+      inSlope: -0.029043932
+      outSlope: -0.029043932
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -1453,16 +1517,16 @@ MonoBehaviour:
       value: -1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 180
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.03238003
+      outSlope: 0.03238003
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -1502,8 +1566,25 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  testL:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  testD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   liftMultiplier: 1
   dragMultiplier: 1
+  liftCoefficient: 0
+  dragCoefficient: 0
+  liftForce: 0
+  dragForce: 0
+  angleOfAttack: 0
   actualLiftForce: {x: 0, y: 0, z: 0}
 --- !u!1 &2032135800414508871
 GameObject:
@@ -1810,15 +1891,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dimensions: {x: 2.4, y: 3}
   applyForcesToCenter: 0
+  isMainWing: 0
   lift:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.030859169
+      outSlope: 0.030859169
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -1827,16 +1909,16 @@ MonoBehaviour:
       value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 90
       value: 0
-      inSlope: -0.022222223
-      outSlope: -0.022222223
-      tangentMode: 136
+      inSlope: -0.029043932
+      outSlope: -0.029043932
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -1845,16 +1927,16 @@ MonoBehaviour:
       value: -1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 180
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.03238003
+      outSlope: 0.03238003
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -1894,8 +1976,25 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  testL:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  testD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   liftMultiplier: 1
   dragMultiplier: 1
+  liftCoefficient: 0
+  dragCoefficient: 0
+  liftForce: 0
+  dragForce: 0
+  angleOfAttack: 0
   actualLiftForce: {x: 0, y: 0, z: 0}
 --- !u!1 &2386260603685573503
 GameObject:
@@ -2026,15 +2125,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dimensions: {x: 1.8, y: 15}
   applyForcesToCenter: 1
+  isMainWing: 0
   lift:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.030859169
+      outSlope: 0.030859169
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -2043,16 +2143,16 @@ MonoBehaviour:
       value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 90
       value: 0
-      inSlope: -0.022222223
-      outSlope: -0.022222223
-      tangentMode: 136
+      inSlope: -0.029043932
+      outSlope: -0.029043932
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -2061,16 +2161,16 @@ MonoBehaviour:
       value: -1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 180
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.03238003
+      outSlope: 0.03238003
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -2110,8 +2210,25 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  testL:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  testD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   liftMultiplier: 1
   dragMultiplier: 1
+  liftCoefficient: 0
+  dragCoefficient: 0
+  liftForce: 0
+  dragForce: 0
+  angleOfAttack: 0
   actualLiftForce: {x: 0, y: 0, z: 0}
 --- !u!1 &2872150786410185391
 GameObject:
@@ -2741,15 +2858,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dimensions: {x: 1.8, y: 1}
   applyForcesToCenter: 0
+  isMainWing: 0
   lift:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.030859169
+      outSlope: 0.030859169
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -2758,16 +2876,16 @@ MonoBehaviour:
       value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 90
       value: 0
-      inSlope: -0.022222223
-      outSlope: -0.022222223
-      tangentMode: 136
+      inSlope: -0.029043932
+      outSlope: -0.029043932
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -2776,16 +2894,16 @@ MonoBehaviour:
       value: -1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 180
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.03238003
+      outSlope: 0.03238003
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -2825,8 +2943,25 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  testL:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  testD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   liftMultiplier: 1
   dragMultiplier: 1
+  liftCoefficient: 0
+  dragCoefficient: 0
+  liftForce: 0
+  dragForce: 0
+  angleOfAttack: 0
   actualLiftForce: {x: 0, y: 0, z: 0}
 --- !u!1 &5574254078593213065
 GameObject:
@@ -3020,16 +3155,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dimensions: {x: 1.9, y: 1.1}
-  applyForcesToCenter: 1
+  applyForcesToCenter: 0
+  isMainWing: 0
   lift:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.030859169
+      outSlope: 0.030859169
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -3038,16 +3174,16 @@ MonoBehaviour:
       value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 90
       value: 0
-      inSlope: -0.022222223
-      outSlope: -0.022222223
-      tangentMode: 136
+      inSlope: -0.029043932
+      outSlope: -0.029043932
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -3056,16 +3192,16 @@ MonoBehaviour:
       value: -1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 180
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.03238003
+      outSlope: 0.03238003
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -3105,8 +3241,25 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  testL:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  testD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   liftMultiplier: 1
   dragMultiplier: 1
+  liftCoefficient: 0
+  dragCoefficient: 0
+  liftForce: 0
+  dragForce: 0
+  angleOfAttack: 0
   actualLiftForce: {x: 0, y: 0, z: 0}
 --- !u!1 &5836520832819902044
 GameObject:
@@ -3495,15 +3648,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dimensions: {x: 2.4, y: 3}
   applyForcesToCenter: 0
+  isMainWing: 0
   lift:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.030859169
+      outSlope: 0.030859169
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -3512,16 +3666,16 @@ MonoBehaviour:
       value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 90
       value: 0
-      inSlope: -0.022222223
-      outSlope: -0.022222223
-      tangentMode: 136
+      inSlope: -0.029043932
+      outSlope: -0.029043932
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -3530,16 +3684,16 @@ MonoBehaviour:
       value: -1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 180
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.03238003
+      outSlope: 0.03238003
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -3579,8 +3733,25 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  testL:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  testD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   liftMultiplier: 1
   dragMultiplier: 1
+  liftCoefficient: 0
+  dragCoefficient: 0
+  liftForce: 0
+  dragForce: 0
+  angleOfAttack: 0
   actualLiftForce: {x: 0, y: 0, z: 0}
 --- !u!1 &6861332641972462325
 GameObject:
@@ -4313,16 +4484,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dimensions: {x: 1.9, y: 1.1}
-  applyForcesToCenter: 1
+  applyForcesToCenter: 0
+  isMainWing: 0
   lift:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.030859169
+      outSlope: 0.030859169
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -4331,16 +4503,16 @@ MonoBehaviour:
       value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 90
       value: 0
-      inSlope: -0.022222223
-      outSlope: -0.022222223
-      tangentMode: 136
+      inSlope: -0.029043932
+      outSlope: -0.029043932
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -4349,16 +4521,16 @@ MonoBehaviour:
       value: -1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 180
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.03238003
+      outSlope: 0.03238003
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -4398,8 +4570,25 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  testL:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  testD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   liftMultiplier: 1
   dragMultiplier: 1
+  liftCoefficient: 0
+  dragCoefficient: 0
+  liftForce: 0
+  dragForce: 0
+  angleOfAttack: 0
   actualLiftForce: {x: 0, y: 0, z: 0}
 --- !u!1 &8290720258429896480
 GameObject:
@@ -4531,6 +4720,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dimensions: {x: 10, y: 4}
   applyForcesToCenter: 1
+  isMainWing: 1
   lift:
     serializedVersion: 2
     m_Curve:
@@ -4624,15 +4814,15 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0.025
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.0016872095
+      outSlope: 0.0016872095
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 90
-      value: 2
+      value: 1.8
       inSlope: 0
       outSlope: 0
       tangentMode: 136
@@ -4642,17 +4832,34 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 180
       value: 0.025
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: -0.0015598722
+      outSlope: -0.0015598722
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  testL:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  testD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   liftMultiplier: 1
   dragMultiplier: 1
+  liftCoefficient: 0
+  dragCoefficient: 0
+  liftForce: 0
+  dragForce: 0
+  angleOfAttack: 0
   actualLiftForce: {x: 0, y: 0, z: 0}
 --- !u!1 &8872542502915254538
 GameObject:
@@ -4700,15 +4907,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dimensions: {x: 1.8, y: 1}
   applyForcesToCenter: 0
+  isMainWing: 0
   lift:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.030859169
+      outSlope: 0.030859169
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -4717,16 +4925,16 @@ MonoBehaviour:
       value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 90
       value: 0
-      inSlope: -0.022222223
-      outSlope: -0.022222223
-      tangentMode: 136
+      inSlope: -0.029043932
+      outSlope: -0.029043932
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -4735,16 +4943,16 @@ MonoBehaviour:
       value: -1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 180
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.03238003
+      outSlope: 0.03238003
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -4784,8 +4992,25 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  testL:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  testD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   liftMultiplier: 1
   dragMultiplier: 1
+  liftCoefficient: 0
+  dragCoefficient: 0
+  liftForce: 0
+  dragForce: 0
+  angleOfAttack: 0
   actualLiftForce: {x: 0, y: 0, z: 0}
 --- !u!1 &9154757062111583053
 GameObject:
@@ -4833,15 +5058,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dimensions: {x: 4.5, y: 2}
   applyForcesToCenter: 0
+  isMainWing: 0
   lift:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.030859169
+      outSlope: 0.030859169
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -4850,16 +5076,16 @@ MonoBehaviour:
       value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 90
       value: 0
-      inSlope: -0.022222223
-      outSlope: -0.022222223
-      tangentMode: 136
+      inSlope: -0.029043932
+      outSlope: -0.029043932
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -4868,16 +5094,16 @@ MonoBehaviour:
       value: -1
       inSlope: 0
       outSlope: 0
-      tangentMode: 136
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 180
       value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
+      inSlope: 0.03238003
+      outSlope: 0.03238003
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
@@ -4917,8 +5143,25 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  testL:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  testD:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   liftMultiplier: 1
   dragMultiplier: 1
+  liftCoefficient: 0
+  dragCoefficient: 0
+  liftForce: 0
+  dragForce: 0
+  angleOfAttack: 0
   actualLiftForce: {x: 0, y: 0, z: 0}
 --- !u!1001 &300177590357331312
 PrefabInstance:

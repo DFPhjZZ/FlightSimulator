@@ -162,7 +162,7 @@ MonoBehaviour:
   delay: 0
   destroy: 1
   applyDamage: 1
-  damageValue: 500
+  damageValue: 600
   play: 0
   volume: 1
   clip: {fileID: 0}

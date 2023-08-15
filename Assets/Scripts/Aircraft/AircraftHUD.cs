@@ -179,7 +179,7 @@ public class AircraftHUD : MonoBehaviour
 
         if (aircraft.target != null)
         {
-            var targetPos = TransformToHUDSpace(aircraft.target.position);
+            var targetPos = TransformToHUDSpace(aircraft.target.transform.position);
             if (targetPos.z > 0)
             {
                 targetBoxImage.color = lockColor;

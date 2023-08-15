@@ -10,11 +10,18 @@ public class AircraftWing : MonoBehaviour
 
 	[Tooltip("When true, wing forces will be applied only at the center of mass.")]
 	public bool applyForcesToCenter = false;
-
+	public bool isMainWing = false;
+	
 	[Tooltip("Lift coefficient curve.")] 
-	public AnimationCurve lift;
-	public AnimationCurve drag;
-	[Tooltip("The higher the value, the more lift the wing applie at a given angle of attack.")]
+	[SerializeField]
+	private AnimationCurve lift;
+	[SerializeField]
+	private AnimationCurve drag;
+	[SerializeField] 
+	private AnimationCurve testL;
+	[SerializeField] 
+	private AnimationCurve testD;
+	[Tooltip("The higher the value, the more lift the wing applies at a given angle of attack.")]
 	public float liftMultiplier = 1f;
 	[Tooltip("The higher the value, the more drag the wing incurs at a given angle of attack.")]
 	public float dragMultiplier = 1f;
@@ -23,10 +30,16 @@ public class AircraftWing : MonoBehaviour
 
 	private Vector3 liftDirection = Vector3.up;
 
+	[Header("Debug")]
+	[SerializeField]
 	private float liftCoefficient = 0f;
+	[SerializeField]
 	private float dragCoefficient = 0f;
+	[SerializeField]
 	private float liftForce = 0f;
+	[SerializeField]
 	private float dragForce = 0f;
+	[SerializeField]
 	private float angleOfAttack = 0f;
 
 	public Vector3 actualLiftForce;
@@ -52,16 +65,6 @@ public class AircraftWing : MonoBehaviour
 		get { return dimensions.x * dimensions.y; }
 	}
 
-	public float LiftCoefficient { get { return liftCoefficient; } }
-	public float LiftForce { get { return liftForce; }
-		set
-		{
-			LiftForce = value;
-		}
-	}
-	public float DragCoefficient { get { return dragCoefficient; } }
-	public float DragForce { get { return dragForce; } }
-
 	public Rigidbody Rigidbody
 	{
 		set { rigid = value; }
@@ -72,6 +75,35 @@ public class AircraftWing : MonoBehaviour
 		// I don't especially like doing this, but there are many cases where wings might not
 		// have the rigidbody on themselves (e.g. they are on a child gameobject of a plane).
 		rigid = GetComponentInParent<Rigidbody>();
+		
+		// if (isMainWing)
+		// {
+		// 	lift = new AnimationCurve(new Keyframe(0.0f, 0.0f),
+		// 		new Keyframe(16f,   1.1f),
+		// 		new Keyframe(20f,   0.6f),
+		// 		new Keyframe(45f, 0.9f),
+		// 		new Keyframe(90f, 0.0f),
+		// 		new Keyframe(135f, -0.9f),
+		// 		new Keyframe(160f, -0.6f),
+		// 		new Keyframe(164f, -1.1f),
+		// 		new Keyframe(180f,  0.0f));
+		// }
+		// if (!isMainWing)
+		// {
+		// 	lift = new AnimationCurve(new Keyframe(0.0f, 0.0f),
+		// 		new Keyframe(45f, 1.0f),
+		// 		new Keyframe(90f, 0.0f),
+		// 		new Keyframe(135f, -1.0f),
+		// 		new Keyframe(180f, 0.0f));
+		// }
+		//
+		//
+		// drag = new AnimationCurve(new Keyframe(0.0f, 0.025f),
+		// 	new Keyframe(90f,  isMainWing ? 1.8f : 2.0f),
+		// 	new Keyframe(180f, 0.025f));
+
+		testL = lift;
+		testD = drag;
 	}
 
 	private void Start()
@@ -85,9 +117,9 @@ public class AircraftWing : MonoBehaviour
 		{
 			Debug.LogError(name + ": SimpleWing has no defined wing curves!");
 		}
-
+		
 		// If needed, uncomment these two lines 
-		// liftMultiplier *= 4.0f;
+		// liftMultiplier *= 2.0f;
 		// dragMultiplier *= 0.25f;
 	}
 
@@ -109,14 +141,12 @@ public class AircraftWing : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (rigid != null && (drag != null && lift != null))
+		if (rigid != null)
 		{
 			Vector3 forceApplyPos = (applyForcesToCenter) ? rigid.transform.TransformPoint(rigid.centerOfMass) : transform.position;
 
 			Vector3 localVelocity = transform.InverseTransformDirection(rigid.GetPointVelocity(transform.position));
 			localVelocity.x = 0f;
-			
-			// Debug.Log("Local Velocity: " + localVelocity + " Rigid Velocity: " + rigid.velocity);
 
 			// Angle of attack is used as the look up for the lift and drag curves.
 			angleOfAttack = Vector3.Angle(Vector3.forward, localVelocity);
@@ -134,12 +164,11 @@ public class AircraftWing : MonoBehaviour
 			liftDirection = Vector3.Cross(rigid.velocity, transform.right).normalized;
 			rigid.AddForceAtPosition(liftDirection * liftForce, forceApplyPos, ForceMode.Force);
 			actualLiftForce = liftDirection * liftForce;
-			
+
 			// Drag is always opposite of the velocity.
 			rigid.AddForceAtPosition(-rigid.velocity.normalized * dragForce, forceApplyPos, ForceMode.Force);
 		}
 	}
-
 // Prevent this code from throwing errors in a built game.
 #if UNITY_EDITOR
 	private void OnDrawGizmosSelected()

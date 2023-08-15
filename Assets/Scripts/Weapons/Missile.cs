@@ -31,10 +31,11 @@ public class Missile : MonoBehaviour
     float timer;
     RayfireBomb rayFireBomb;
     private float maxDistance;
-    private float minDistance = 50.0f;
+    private float minDistance = 100.0f;
     private Transform hitTransform;
+    private Vector3 missileHitTransform;
 
-    public GameObject target { get; set; }
+    public Hostile target { get; set; }
     public Rigidbody Rigidbody { get; private set; }
 
     private void Awake()
@@ -79,17 +80,23 @@ public class Missile : MonoBehaviour
         //}
 
         rayFireBomb.Explode(0.0f);
-        if (hitTransform != null && hitTransform.gameObject.tag == "hostile")
+        if (hitTransform != null)
         {
-            if (target != null)
+            if (target != null && Vector3.Distance(missileHitTransform, target.transform.position) <= this.damageRadius)
             {
-                var rfr = target.GetComponent<RayfireRigid>();
-                RayfireRigid[] subRigids = target.GetComponentsInChildren<RayfireRigid>();
+                Destroy(target.intactObject);
+                var shattered = target.shatteredObject;
+                shattered.SetActive(true);
+                target.transform.DetachChildren();
+                var rfr = shattered.GetComponent<RayfireRigid>();
                 if (rfr != null)
                 {
                     rfr.Demolish();
+                    Destroy(target.gameObject);
+                    this.owner.target = null;
+                    target = null;
                 }
-                target = null;
+                // Destroy(target.gameObject);
             }
             hitTransform = null;
         }
@@ -116,6 +123,7 @@ public class Missile : MonoBehaviour
             //     Explode();
             // }
             Rigidbody.position = hit.point;
+            missileHitTransform = hit.point;
             hitTransform = hit.transform;
             Explode();
             owner.target = null;

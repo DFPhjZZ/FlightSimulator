@@ -9,11 +9,18 @@ public class Hostile : MonoBehaviour
     Aircraft aircraft;
     [SerializeField]
     float maxDistance = 2000f;
+    [SerializeField] 
+    public GameObject intactObject;
+    [SerializeField]
+    public GameObject shatteredObject;
     
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (aircraft == null)
+        {
+            // aircraft = GameObject.FindWithTag("Player").gameObject.GetComponent<Aircraft>();
+        }
     }
 
     // Update is called once per frame
