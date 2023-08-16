@@ -34,7 +34,7 @@ public class Aircraft : MonoBehaviour
     GameObject damageEffect;
     [SerializeField]
     GameObject deathEffect;
-    [SerializeField] 
+    [SerializeField]
     private float respawnTime;
     [SerializeField]
     bool flapsDeployed;
@@ -69,7 +69,7 @@ public class Aircraft : MonoBehaviour
     Transform cannonSpawnPoint;
     [SerializeField]
     GameObject bulletPrefab;
-    
+
     [Header("Surfaces")]
     public List<ControlSurface> elevators;
     public ControlSurface aileronLeft;
@@ -98,10 +98,10 @@ public class Aircraft : MonoBehaviour
 
     private bool inWindArea;
     private WindArea windArea;
-    
+
     private Plane[] missileLockPlanes;
     private Camera cam;
-    
+
     PhysicMaterial landingGearDefaultMaterial;
 
     public float MaxHealth
@@ -193,7 +193,7 @@ public class Aircraft : MonoBehaviour
     {
         landingGearDown = true;
         landingGearStatus = false;
-        
+
         hostileObjects = new List<Hostile>();
 
         respawnReady = false;
@@ -219,7 +219,7 @@ public class Aircraft : MonoBehaviour
         missileLockDirection = Vector3.forward;
 
         respawnTimer = 0f;
-        
+
         // Rb.velocity = Rb.rotation * new Vector3(0, 0, initialSpeed);
 
         cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
@@ -341,13 +341,13 @@ public class Aircraft : MonoBehaviour
     public void Respawn()
     {
         transform.position = respawnPoint;
-        
+
         Throttle = maxThrust;
         Dead = false;
         respawnReady = false;
 
         health = maxHealth;
-        
+
         deathEffect.SetActive(false);
         foreach (var g in graphics)
         {
@@ -430,7 +430,7 @@ public class Aircraft : MonoBehaviour
     {
         Rb.AddRelativeForce(Throttle * maxThrust * Vector3.forward);
     }
-    
+
     Vector3 CalculateGForce(Vector3 angularVelocity, Vector3 velocity)
     {
         //estiamte G Force from angular velocity and velocity
@@ -493,7 +493,7 @@ public class Aircraft : MonoBehaviour
 
         return bounds;
     }
-    
+
     // Update is called once per frame
     void Update()
     {
@@ -546,7 +546,6 @@ public class Aircraft : MonoBehaviour
             {
                 respawnReady = true;
                 respawnTimer = 0f;
-                Respawn();
             }
         }
     }
@@ -579,7 +578,7 @@ public class Aircraft : MonoBehaviour
             Vector3 deadForward = Rb.velocity.normalized;
             Rb.rotation = Quaternion.LookRotation(deadForward, deadUp);
         }
-        
+
         //calculate again, so that other systems can read this plane's state
         CalculateState(dt);
 
@@ -597,7 +596,7 @@ public class Aircraft : MonoBehaviour
 
         if (other.CompareTag("RespawnCheckbox"))
         {
-            respawnPoint = other.transform.position +other.GetComponent<Respawn>().respawnPointOffset;
+            respawnPoint = other.transform.position + other.GetComponent<Respawn>().respawnPointOffset;
         }
     }
 

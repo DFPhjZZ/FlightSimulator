@@ -1,5 +1,6 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,6 +38,10 @@ public class AircraftHUD : MonoBehaviour
     Text healthText;
     [SerializeField]
     Transform targetBox;
+    [SerializeField]
+    Text pauseText;
+    [SerializeField]
+    Text respawnText;
 
     Aircraft aircraft;
     Transform aircraftTransform;
@@ -47,89 +52,115 @@ public class AircraftHUD : MonoBehaviour
     GameObject velocityMarkerGO;
     GameObject targetBoxGO;
     Image targetBoxImage;
+    GameObject pauseTextGO;
+    GameObject respawnTextGO;
 
     float lastUpdateTime;
 
     const float metersToKnots = 1.94384f;
     const float metersToFeet = 3.28084f;
 
-    void Start() {
+    void Start()
+    {
         hudCenterGO = hudCenter.gameObject;
         velocityMarkerGO = velocityMarker.gameObject;
         targetBoxGO = targetBox.gameObject;
         targetBoxImage = targetBox.GetComponent<Image>();
+        pauseTextGO = pauseText.gameObject;
+        respawnTextGO = respawnText.gameObject;
     }
 
-    public void SetAircraft(Aircraft aircraft) {
+    public void SetAircraft(Aircraft aircraft)
+    {
         this.aircraft = aircraft;
 
-        if (aircraft == null) {
+        if (aircraft == null)
+        {
             aircraftTransform = null;
         }
-        else {
+        else
+        {
             aircraftTransform = aircraft.GetComponent<Transform>();
         }
 
-        if (compass != null) {
+        if (compass != null)
+        {
             compass.SetAircraft(aircraft);
         }
 
-        if (pitchLadder != null) {
+        if (pitchLadder != null)
+        {
             pitchLadder.SetAircraft(aircraft);
         }
     }
 
-    public void SetCamera(Camera camera) {
+    public void SetCamera(Camera camera)
+    {
         this.camera = camera;
 
-        if (camera == null) {
+        if (camera == null)
+        {
             cameraTransform = null;
-        } else {
+        }
+        else
+        {
             cameraTransform = camera.GetComponent<Transform>();
         }
 
-        if (compass != null) {
+        if (compass != null)
+        {
             compass.SetCamera(camera);
         }
 
-        if (pitchLadder != null) {
+        if (pitchLadder != null)
+        {
             pitchLadder.SetCamera(camera);
         }
     }
 
-    public void ToggleHelpDialogs() {
-        foreach (var dialog in helpDialogs) {
+    public void ToggleHelpDialogs()
+    {
+        foreach (var dialog in helpDialogs)
+        {
             dialog.SetActive(!dialog.activeSelf);
         }
     }
 
-    void UpdateVelocityMarker() {
+    void UpdateVelocityMarker()
+    {
         var velocity = aircraftTransform.forward;
 
-        if (aircraft.LocalVelocity.sqrMagnitude > 1) {
+        if (aircraft.LocalVelocity.sqrMagnitude > 1)
+        {
             velocity = aircraft.Rb.velocity;
         }
 
         var hudPos = TransformToHUDSpace(cameraTransform.position + velocity);
 
-        if (hudPos.z > 0) {
+        if (hudPos.z > 0)
+        {
             velocityMarkerGO.SetActive(true);
             velocityMarker.localPosition = new Vector3(hudPos.x, hudPos.y, 0);
-        } else {
+        }
+        else
+        {
             velocityMarkerGO.SetActive(false);
         }
     }
 
-    void UpdateAirspeed() {
+    void UpdateAirspeed()
+    {
         var speed = aircraft.LocalVelocity.z * metersToKnots;
         airspeed.text = string.Format("{0:0}", speed);
     }
 
-    void UpdateAOA() {
+    void UpdateAOA()
+    {
         aoaIndicator.text = string.Format("{0:0.0} AOA", aircraft.AngleOfAttack * Mathf.Rad2Deg);
     }
 
-    void UpdateGForce() {
+    void UpdateGForce()
+    {
         var gforce = aircraft.LocalGForce.y / 9.81f;
         gforceIndicator.text = string.Format("{0:0.0} G", gforce);
     }
@@ -140,25 +171,31 @@ public class AircraftHUD : MonoBehaviour
         this.altitude.text = string.Format("{0:0}", altitude);
     }
 
-    Vector3 TransformToHUDSpace(Vector3 worldSpace) {
+    Vector3 TransformToHUDSpace(Vector3 worldSpace)
+    {
         var screenSpace = camera.WorldToScreenPoint(worldSpace);
         return screenSpace - new Vector3(camera.pixelWidth / 2, camera.pixelHeight / 2);
     }
 
-    void UpdateHUDCenter() {
+    void UpdateHUDCenter()
+    {
         var rotation = cameraTransform.localEulerAngles;
         var hudPos = TransformToHUDSpace(cameraTransform.position + aircraftTransform.forward);
 
-        if (hudPos.z > 0) {
+        if (hudPos.z > 0)
+        {
             hudCenterGO.SetActive(true);
             hudCenter.localPosition = new Vector3(hudPos.x, hudPos.y, 0);
             hudCenter.localEulerAngles = new Vector3(0, 0, -rotation.z);
-        } else {
+        }
+        else
+        {
             hudCenterGO.SetActive(false);
         }
     }
 
-    void UpdateHealth() {
+    void UpdateHealth()
+    {
         healthBar.SetValue(aircraft.Health / aircraft.MaxHealth);
         healthText.text = string.Format("{0:0}", aircraft.Health);
     }
@@ -175,7 +212,7 @@ public class AircraftHUD : MonoBehaviour
             targetBoxGO.SetActive(true);
             targetBox.localPosition = new Vector3(targetBoxPos.x, targetBoxPos.y, 0);
         }
-        else 
+        else
         {
             targetBoxGO.SetActive(false);
         }
@@ -189,19 +226,46 @@ public class AircraftHUD : MonoBehaviour
                 targetBox.localPosition = new Vector3(targetPos.x, targetPos.y, 0);
             }
         }
-
     }
 
-    void LateUpdate() {
+    void UpdatePause()
+    {
+        if (CraftController.gamePaused)
+        {
+            pauseTextGO.SetActive(true);
+        }
+        else
+        {
+            pauseTextGO.SetActive(false);
+        }
+    }
+
+    void UpdateRespawn()
+    {
+        if (aircraft.respawnReady)
+        {
+            respawnTextGO.SetActive(true);
+        }
+        else
+        {
+            respawnTextGO.SetActive(false);
+        }
+    }
+
+    void LateUpdate()
+    {
         if (aircraft == null) return;
         if (camera == null) return;
-        
+
         throttleBar.SetValue(aircraft.Throttle);
 
-        if (!aircraft.Dead) {
+        if (!aircraft.Dead)
+        {
             UpdateVelocityMarker();
             UpdateHUDCenter();
-        } else {
+        }
+        else
+        {
             hudCenterGO.SetActive(false);
             velocityMarkerGO.SetActive(false);
         }
@@ -210,9 +274,12 @@ public class AircraftHUD : MonoBehaviour
         UpdateAltitude();
         UpdateHealth();
         UpdateWeapon();
+        UpdatePause();
+        UpdateRespawn();
 
         //update these elements at reduced rate to make reading them easier
-        if (Time.time > lastUpdateTime + (1f / updateRate)) {
+        if (Time.time > lastUpdateTime + (1f / updateRate))
+        {
             UpdateAOA();
             UpdateGForce();
             lastUpdateTime = Time.time;

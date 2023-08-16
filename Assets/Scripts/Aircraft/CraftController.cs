@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
@@ -119,6 +119,14 @@ public class CraftController : MonoBehaviour
         aircraft.landingGearStatus = true;
     }
 
+    public void OnRespawn(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed && aircraft.respawnReady)
+        {
+            aircraft.Respawn();
+        }
+    }
+
     public void OnPause(InputAction.CallbackContext context)
     {
         gamePaused = !gamePaused;
@@ -126,7 +134,7 @@ public class CraftController : MonoBehaviour
         else Time.timeScale = 1f;
     }
 
-// public void OnFlapsInput(InputAction.CallbackContext context) {
+    // public void OnFlapsInput(InputAction.CallbackContext context) {
     //     if (plane == null) return;
     //
     //     if (context.phase == InputActionPhase.Performed) {
@@ -134,7 +142,8 @@ public class CraftController : MonoBehaviour
     //     }
     // }
 
-    void Update() {
+    void Update()
+    {
         if (aircraft == null) return;
 
         aircraft.SetControlInput(controlInput);
