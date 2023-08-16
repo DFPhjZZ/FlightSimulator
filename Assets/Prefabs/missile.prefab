@@ -58,7 +58,7 @@ MonoBehaviour:
   turningGForce: 5
   collisionMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 695
   renderer: {fileID: 1397158608921222460}
   explosionGraphic: {fileID: 6622940637758109016}
 --- !u!33 &4638493424015319493
@@ -5026,7 +5026,7 @@ GameObject:
   - component: {fileID: 5844607505440006090}
   - component: {fileID: 8459941784521052987}
   - component: {fileID: 5065531570617114156}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}

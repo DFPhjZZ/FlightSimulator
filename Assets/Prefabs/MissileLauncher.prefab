@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6624237308980961171}
   - component: {fileID: 5727500254387928355}
+  - component: {fileID: 2760660430220383749}
   m_Layer: 0
   m_Name: MissileLauncher
   m_TagString: Untagged
@@ -32,7 +33,7 @@ Transform:
   - {fileID: 3680064579752484925}
   - {fileID: 8443565841359765110}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5727500254387928355
 MonoBehaviour:
@@ -50,6 +51,27 @@ MonoBehaviour:
   maxDistance: 2000
   intactObject: {fileID: 380957569645154862}
   shatteredObject: {fileID: 4629716470461623873}
+--- !u!65 &2760660430220383749
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553530885454504969}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 35, y: 30, z: 35}
+  m_Center: {x: 0, y: 10, z: 0}
 --- !u!1001 &3049853529349264233
 PrefabInstance:
   m_ObjectHideFlags: 0

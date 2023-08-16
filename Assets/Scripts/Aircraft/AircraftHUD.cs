@@ -134,8 +134,9 @@ public class AircraftHUD : MonoBehaviour
         gforceIndicator.text = string.Format("{0:0.0} G", gforce);
     }
 
-    void UpdateAltitude() {
-        var altitude = aircraft.Rb.position.y * metersToFeet;
+    void UpdateAltitude()
+    {
+        var altitude = aircraft.Rb.position.y;// * metersToFeet;
         this.altitude.text = string.Format("{0:0}", altitude);
     }
 
@@ -164,6 +165,8 @@ public class AircraftHUD : MonoBehaviour
 
     void UpdateWeapon()
     {
+        if (aircraft.Dead) return;
+
         targetBoxImage.color = normalColor;
         var rotation = cameraTransform.localEulerAngles;
         var targetBoxPos = TransformToHUDSpace(cameraTransform.position + aircraftTransform.forward);

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7295289126205806362}
   - component: {fileID: 1825326544149912866}
+  - component: {fileID: 4456099813965461222}
   m_Layer: 0
   m_Name: Radar
   m_TagString: Hostile
@@ -32,7 +33,7 @@ Transform:
   - {fileID: 6363431925234731128}
   - {fileID: 3751564815458734713}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1825326544149912866
 MonoBehaviour:
@@ -50,6 +51,27 @@ MonoBehaviour:
   maxDistance: 2000
   intactObject: {fileID: 6366780879673163230}
   shatteredObject: {fileID: 1182659291396713492}
+--- !u!65 &4456099813965461222
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5199041336228590915}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 25, y: 15, z: 25}
+  m_Center: {x: 0, y: 7.5, z: 0}
 --- !u!1001 &1800512092899267024
 PrefabInstance:
   m_ObjectHideFlags: 0

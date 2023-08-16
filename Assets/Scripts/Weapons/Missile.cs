@@ -82,7 +82,7 @@ public class Missile : MonoBehaviour
         rayFireBomb.Explode(0.0f);
         if (hitTransform != null)
         {
-            if (target != null && Vector3.Distance(missileHitTransform, target.transform.position) <= this.damageRadius)
+            if (target != null)
             {
                 Destroy(target.intactObject);
                 var shattered = target.shatteredObject;

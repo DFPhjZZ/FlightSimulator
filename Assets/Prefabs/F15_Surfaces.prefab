@@ -671,6 +671,7 @@ MonoBehaviour:
   - {fileID: 5578768197555609316}
   damageEffect: {fileID: 5432819478181028628}
   deathEffect: {fileID: 4502078049758124290}
+  respawnTime: 5
   flapsDeployed: 1
   initialSpeed: 0
   flapsRetractSpeed: 125

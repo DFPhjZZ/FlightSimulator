@@ -120,7 +120,7 @@ public class AircraftWing : MonoBehaviour
 		
 		// If needed, uncomment these two lines 
 		// liftMultiplier *= 2.0f;
-		// dragMultiplier *= 0.25f;
+		// dragMultiplier *= 0.05f;
 	}
 
 	private void Update()

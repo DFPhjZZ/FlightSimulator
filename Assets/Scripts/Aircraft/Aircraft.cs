@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RayFire;
+using Unity.VisualScripting;
 using Random = System.Random;
 
 public class Aircraft : MonoBehaviour
@@ -33,6 +34,8 @@ public class Aircraft : MonoBehaviour
     GameObject damageEffect;
     [SerializeField]
     GameObject deathEffect;
+    [SerializeField] 
+    private float respawnTime;
     [SerializeField]
     bool flapsDeployed;
     [SerializeField]
@@ -79,6 +82,9 @@ public class Aircraft : MonoBehaviour
     Vector3 controlInput;
 
     Vector3 lastVelocity;
+
+    private float respawnTimer = 0f;
+    private Vector3 respawnPoint;
 
     // Weapons
     int missileIndex;
@@ -137,6 +143,7 @@ public class Aircraft : MonoBehaviour
     }
 
     public bool Dead { get; private set; }
+    public bool respawnReady { get; set; }
 
     public Rigidbody Rb { get; private set; }
     public float Throttle { get; private set; }
@@ -186,7 +193,10 @@ public class Aircraft : MonoBehaviour
     {
         landingGearDown = true;
         landingGearStatus = false;
+        
         hostileObjects = new List<Hostile>();
+
+        respawnReady = false;
     }
 
     // Start is called before the first frame update
@@ -208,7 +218,9 @@ public class Aircraft : MonoBehaviour
         }
         missileLockDirection = Vector3.forward;
 
-        Rb.velocity = Rb.rotation * new Vector3(0, 0, initialSpeed);
+        respawnTimer = 0f;
+        
+        // Rb.velocity = Rb.rotation * new Vector3(0, 0, initialSpeed);
 
         cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
@@ -324,6 +336,27 @@ public class Aircraft : MonoBehaviour
 
         damageEffect.GetComponent<ParticleSystem>().Pause();
         deathEffect.SetActive(true);
+    }
+
+    public void Respawn()
+    {
+        transform.position = respawnPoint;
+        
+        Throttle = maxThrust;
+        Dead = false;
+        respawnReady = false;
+
+        health = maxHealth;
+        
+        deathEffect.SetActive(false);
+        foreach (var g in graphics)
+        {
+            g.SetActive(true);
+        }
+
+        Rb.isKinematic = false;
+        Rb.AddForce(Vector3.forward * 300f, ForceMode.VelocityChange);
+        Debug.Log(Rb.velocity);
     }
 
     void CalculateAngleOfAttack()
@@ -464,27 +497,30 @@ public class Aircraft : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (elevators != null)
+        if (!CraftController.gamePaused)
         {
-            foreach (var elevator in elevators)
+            if (elevators != null)
             {
-                elevator.targetDeflection = controlInput.x;
+                foreach (var elevator in elevators)
+                {
+                    elevator.targetDeflection = controlInput.x;
+                }
             }
-        }
-        if (aileronLeft != null)
-        {
-            aileronLeft.targetDeflection = -controlInput.z;
-        }
-        if (aileronRight != null)
-        {
-            aileronRight.targetDeflection = controlInput.z;
-        }
-
-        if (rudders != null)
-        {
-            foreach (var rudder in rudders)
+            if (aileronLeft != null)
             {
-                rudder.targetDeflection = controlInput.y;
+                aileronLeft.targetDeflection = -controlInput.z;
+            }
+            if (aileronRight != null)
+            {
+                aileronRight.targetDeflection = controlInput.z;
+            }
+
+            if (rudders != null)
+            {
+                foreach (var rudder in rudders)
+                {
+                    rudder.targetDeflection = controlInput.y;
+                }
             }
         }
 
@@ -500,6 +536,17 @@ public class Aircraft : MonoBehaviour
                 && Vector3.Distance(potentialHostile.transform.position, transform.position) <= missileMaxLockDistance)
             {
                 target = potentialHostile;
+            }
+        }
+
+        if (Dead && !respawnReady)
+        {
+            respawnTimer += Time.deltaTime;
+            if (respawnTimer >= respawnTime)
+            {
+                respawnReady = true;
+                respawnTimer = 0f;
+                Respawn();
             }
         }
     }
@@ -541,17 +588,22 @@ public class Aircraft : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "WindArea")
+        if (other.CompareTag("WindArea"))
         {
             Debug.Log("Enter");
             inWindArea = true;
             windArea = other.gameObject.GetComponent<WindArea>();
         }
+
+        if (other.CompareTag("RespawnCheckbox"))
+        {
+            respawnPoint = other.transform.position +other.GetComponent<Respawn>().respawnPointOffset;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "WindArea")
+        if (other.CompareTag("WindArea"))
         {
             inWindArea = false;
             windArea = null;
@@ -564,7 +616,7 @@ public class Aircraft : MonoBehaviour
         {
             var contact = collision.contacts[i];
 
-            if (landingGear.Contains(contact.thisCollider) || collision.gameObject.tag == "Destroyable")
+            if (landingGear.Contains(contact.thisCollider) || collision.collider.CompareTag("Destroyable"))
             {
                 return;
             }

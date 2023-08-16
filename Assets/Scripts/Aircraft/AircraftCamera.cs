@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Net;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -132,14 +133,24 @@ public class AircraftCamera : MonoBehaviour
         var tempPos = cameraTransform.position;
         var aircraft2Cam = (cameraTransform.position - aircraft.transform.position).normalized;
         Ray ray = new Ray(aircraft.transform.position, aircraft2Cam);
-        RaycastHit hit;
-        bool flag = Physics.Raycast(ray, out hit);
-        if (flag && hit.transform.gameObject.tag != "MainCamera")
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(ray, cameraOffset.magnitude);
+        RaycastHit adjustHit = new RaycastHit();
+        foreach (var hit in hits)
         {
-            cameraTransform.position = hit.point;
-            if (Vector3.Distance(hit.point, aircraft.transform.position) > distance)
+            if (hit.collider.CompareTag("MainCamera") && hit.collider.CompareTag("Player"))
             {
-                var dist = (hit.point - aircraft.transform.position).normalized;
+                adjustHit = hit;
+                break;
+            }
+        }
+        if (hits.Length > 1)
+        {
+            // Debug.Log(adjustHit.transform.gameObject.name);
+            cameraTransform.position = adjustHit.point;
+            var dist = (adjustHit.point - aircraft.transform.position).normalized;
+            if (Vector3.Distance(adjustHit.point, aircraft.transform.position) > distance)
+            {
                 cameraTransform.position = aircraft.transform.position + distance * dist;
             }
         }
