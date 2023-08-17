@@ -82,20 +82,12 @@ public class Missile : MonoBehaviour
         rayFireBomb.Explode(0.0f);
         if (hitTransform != null)
         {
-            if (target != null)
+            // Debug.Log(target.name);
+            if (target != null && hitTransform.CompareTag("Hostile"))
             {
-                Destroy(target.intactObject);
-                var shattered = target.shatteredObject;
-                shattered.SetActive(true);
-                target.transform.DetachChildren();
-                var rfr = shattered.GetComponent<RayfireRigid>();
-                if (rfr != null)
-                {
-                    rfr.Demolish();
-                    Destroy(target.gameObject);
-                    this.owner.target = null;
-                    target = null;
-                }
+                // Debug.Log("111");
+                target.health -= damage;
+                if (target.health <= 0f) target = null;
                 // Destroy(target.gameObject);
             }
             hitTransform = null;

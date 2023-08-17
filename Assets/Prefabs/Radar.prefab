@@ -51,6 +51,8 @@ MonoBehaviour:
   maxDistance: 2000
   intactObject: {fileID: 6366780879673163230}
   shatteredObject: {fileID: 1182659291396713492}
+  maxHealth: 250
+  point: 50
 --- !u!65 &4456099813965461222
 BoxCollider:
   m_ObjectHideFlags: 0

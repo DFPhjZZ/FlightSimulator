@@ -328,6 +328,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3237112211596624809}
   - component: {fileID: 5563523432474882089}
+  - component: {fileID: 8401131140273323807}
   m_Layer: 0
   m_Name: Radar_Shatter
   m_TagString: Untagged
@@ -451,7 +452,7 @@ MonoBehaviour:
   activation:
     byVelocity: 0
     byOffset: 0
-    byDamage: 500
+    byDamage: 250
     byActivator: 0
     byImpact: 0
     byConnectivity: 0
@@ -1985,6 +1986,73 @@ MonoBehaviour:
   dustList: []
   restriction: {fileID: 0}
   sound: {fileID: 0}
+--- !u!114 &8401131140273323807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 618420767977799108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5e79b13bbb1d74e8a4fe76b5c902d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onDemolition: 1
+  onActivation: 0
+  onImpact: 0
+  opacity: 0.25
+  dustMaterial: {fileID: 0}
+  dustMaterials:
+  - {fileID: 2100000, guid: 4e968ed639b0f194fa6e1e19e721b4a7, type: 2}
+  - {fileID: 2100000, guid: 766f926b1c8bc954d88b7428f6d4a280, type: 2}
+  - {fileID: 2100000, guid: 4a40f952e235d5d44b5f644bc9301567, type: 2}
+  - {fileID: 2100000, guid: 36d315837dc798d48afcb736a46e3565, type: 2}
+  emissionMaterial: {fileID: 0}
+  emission:
+    burstType: 2
+    burstAmount: 20
+    distanceRate: 1
+    duration: 4
+    lifeMin: 2
+    lifeMax: 13
+    sizeMin: 0.5
+    sizeMax: 2.5
+  dynamic:
+    speedMin: 0.5
+    speedMax: 1
+    rotation: 0.5
+    gravityMin: 0.01
+    gravityMax: 0.6
+  noise:
+    enabled: 0
+    quality: 2
+    strengthMin: 0.3
+    strengthMax: 0.6
+    frequency: 0.3
+    scrollSpeed: 0.7
+    damping: 1
+  collision:
+    collidesWith: 0
+    quality: 0
+    radiusScale: 1
+  limitations:
+    minParticles: 3
+    maxParticles: 20
+    percentage: 50
+    sizeThreshold: 0.5
+    demolitionDepth: 2
+  rendering:
+    castShadows: 1
+    receiveShadows: 1
+    lightProbes: 0
+  rigid: {fileID: 0}
+  pSystem: {fileID: 0}
+  hostTm: {fileID: 0}
+  initialized: 0
+  children: []
+  amountFinal: 5
+  oldChild: 0
 --- !u!1 &643272999730616758
 GameObject:
   m_ObjectHideFlags: 0

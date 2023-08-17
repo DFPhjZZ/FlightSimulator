@@ -8,7 +8,7 @@ using UnityEngine.Timeline;
 public class CraftController : MonoBehaviour
 {
     [SerializeField] Aircraft aircraft;
-    [SerializeField] AircraftHUD aircfratHUD;
+    [SerializeField] AircraftHUD aircraftHUD;
     [SerializeField] new Camera camera;
 
     Vector3 controlInput;
@@ -26,22 +26,22 @@ public class CraftController : MonoBehaviour
     {
         this.aircraft = aircraft;
 
-        if (aircfratHUD != null)
+        if (aircraftHUD != null)
         {
-            aircfratHUD.SetAircraft(aircraft);
-            aircfratHUD.SetCamera(camera);
+            aircraftHUD.SetAircraft(aircraft);
+            aircraftHUD.SetCamera(camera);
         }
 
         aircraftCamera.SetAircraft(aircraft);
     }
 
-    // public void OnToggleHelp(InputAction.CallbackContext context) {
-    //     if (plane == null) return;
-    //
-    //     if (context.phase == InputActionPhase.Performed) {
-    //         planeHUD.ToggleHelpDialogs();
-    //     }
-    // }
+    public void OnToggleHelp(InputAction.CallbackContext context) {
+        if (aircraft == null) return;
+    
+        if (context.phase == InputActionPhase.Performed) {
+            aircraftHUD.ToggleHelpDialogs();
+        }
+    }
 
     public void SetThrottleInput(InputAction.CallbackContext context)
     {

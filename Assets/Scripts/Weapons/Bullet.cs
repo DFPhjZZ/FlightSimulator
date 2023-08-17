@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class Bullet : MonoBehaviour {
     new Rigidbody rigidbody;
     Vector3 lastPosition;
     float startTime;
-
+    
     public void Fire(Aircraft owner) {
         this.owner = owner;
         rigidbody = GetComponent<Rigidbody>();
@@ -43,9 +44,14 @@ public class Bullet : MonoBehaviour {
         Ray ray = new Ray(lastPosition, diff.normalized);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit, collisionMask.value))
         {
             owner.cannonTarget.position = hit.point;
+            if (hit.transform.CompareTag("Hostile"))
+            {
+                var hostile = hit.transform.GetComponent<Hostile>();
+                hostile.health -= damage;
+            }
             Destroy(gameObject);
         }
 

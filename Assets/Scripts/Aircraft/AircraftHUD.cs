@@ -42,6 +42,8 @@ public class AircraftHUD : MonoBehaviour
     Text pauseText;
     [SerializeField]
     Text respawnText;
+    [SerializeField] 
+    GameObject helpPromptGO;
 
     Aircraft aircraft;
     Transform aircraftTransform;
@@ -120,10 +122,7 @@ public class AircraftHUD : MonoBehaviour
 
     public void ToggleHelpDialogs()
     {
-        foreach (var dialog in helpDialogs)
-        {
-            dialog.SetActive(!dialog.activeSelf);
-        }
+        helpPromptGO.SetActive(!helpPromptGO.activeSelf);
     }
 
     void UpdateVelocityMarker()

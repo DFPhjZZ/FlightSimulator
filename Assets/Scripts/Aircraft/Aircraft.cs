@@ -76,6 +76,14 @@ public class Aircraft : MonoBehaviour
     public ControlSurface aileronRight;
     public List<ControlSurface> rudders;
 
+    [Header("Audios")] 
+    [SerializeField]
+    private AudioSource missileAudio;
+    [SerializeField] 
+    private AudioSource cannonAudio;
+    [SerializeField]
+    private AudioSource deadAudio;
+
     new AircraftAnimation animation;
 
     float throttleInput;
@@ -191,6 +199,8 @@ public class Aircraft : MonoBehaviour
 
     private void Awake()
     {
+        Dead = false;
+        
         landingGearDown = true;
         landingGearStatus = false;
 
@@ -275,6 +285,7 @@ public class Aircraft : MonoBehaviour
             missile.target = target;
         }
         missile.Launch(this);
+        missileAudio.Play();
     }
 
     void UpdateCannon(float dt)
@@ -288,6 +299,7 @@ public class Aircraft : MonoBehaviour
             var bulletGO = Instantiate(bulletPrefab, cannonSpawnPoint.position, cannonSpawnPoint.rotation * Quaternion.Euler(spread.x, spread.y, 0));
             var bullet = bulletGO.GetComponent<Bullet>();
             bullet.Fire(this);
+            cannonAudio.Play();
         }
     }
 
@@ -336,6 +348,8 @@ public class Aircraft : MonoBehaviour
 
         damageEffect.GetComponent<ParticleSystem>().Pause();
         deathEffect.SetActive(true);
+        
+        deadAudio.Play();
     }
 
     public void Respawn()
@@ -356,7 +370,6 @@ public class Aircraft : MonoBehaviour
 
         Rb.isKinematic = false;
         Rb.AddForce(Vector3.forward * 300f, ForceMode.VelocityChange);
-        Debug.Log(Rb.velocity);
     }
 
     void CalculateAngleOfAttack()
@@ -401,7 +414,10 @@ public class Aircraft : MonoBehaviour
     void UpdateThrottle(float dt)
     {
         float target = 0;
-        if (throttleInput > 0) target = 1;
+        if (throttleInput > 0)
+        {
+            target = 1;
+        }
         // Debug.Log(throttleInput);
 
         //throttle input is [-1, 1]
@@ -531,7 +547,7 @@ public class Aircraft : MonoBehaviour
         {
             int idx = rnd.Next(0, hostileObjects.Count - 1);
             var potentialHostile = hostileObjects[idx];
-            if (potentialHostile != null && potentialHostile.gameObject.active &&
+            if (potentialHostile != null && potentialHostile.gameObject.activeSelf &&
                 GeometryUtility.TestPlanesAABB(planes, CalculateBounds(potentialHostile.transform))
                 && Vector3.Distance(potentialHostile.transform.position, transform.position) <= missileMaxLockDistance)
             {
@@ -556,7 +572,9 @@ public class Aircraft : MonoBehaviour
 
         if (inWindArea)
         {
-            Rb.AddForce(windArea.Direction * windArea.Strength);
+            // Debug.Log("111");
+            Rb.AddForce(windArea.Direction * windArea.Strength, ForceMode.Force);
+            Debug.DrawRay(Rb.position, windArea.Direction * windArea.Strength * 0.001f, Color.green);
         }
 
         //calculate at start, to capture any changes that happened externally
@@ -589,7 +607,7 @@ public class Aircraft : MonoBehaviour
     {
         if (other.CompareTag("WindArea"))
         {
-            Debug.Log("Enter");
+            // Debug.Log("Enter");
             inWindArea = true;
             windArea = other.gameObject.GetComponent<WindArea>();
         }
