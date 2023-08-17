@@ -76,10 +76,10 @@ public class Aircraft : MonoBehaviour
     public ControlSurface aileronRight;
     public List<ControlSurface> rudders;
 
-    [Header("Audios")] 
+    [Header("Audios")]
     [SerializeField]
     private AudioSource missileAudio;
-    [SerializeField] 
+    [SerializeField]
     private AudioSource cannonAudio;
     [SerializeField]
     private AudioSource deadAudio;
@@ -165,6 +165,9 @@ public class Aircraft : MonoBehaviour
 
     public Hostile target { get; set; }
 
+    public int score { get; set; }
+    public int objectiveID { get; set; }
+
     public bool FlapsDeployed
     {
         get
@@ -200,13 +203,15 @@ public class Aircraft : MonoBehaviour
     private void Awake()
     {
         Dead = false;
-        
+
         landingGearDown = true;
         landingGearStatus = false;
 
         hostileObjects = new List<Hostile>();
 
         respawnReady = false;
+
+        objectiveID = 0;
     }
 
     // Start is called before the first frame update
@@ -348,7 +353,7 @@ public class Aircraft : MonoBehaviour
 
         damageEffect.GetComponent<ParticleSystem>().Pause();
         deathEffect.SetActive(true);
-        
+
         deadAudio.Play();
     }
 
@@ -538,6 +543,11 @@ public class Aircraft : MonoBehaviour
                     rudder.targetDeflection = controlInput.y;
                 }
             }
+        }
+
+        if (objectiveID == 0 && transform.position.y >= 1470f)
+        {
+            objectiveID = 1;
         }
 
         Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);

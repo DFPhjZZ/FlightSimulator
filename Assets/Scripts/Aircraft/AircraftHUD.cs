@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class AircraftHUD : MonoBehaviour
@@ -42,8 +43,12 @@ public class AircraftHUD : MonoBehaviour
     Text pauseText;
     [SerializeField]
     Text respawnText;
-    [SerializeField] 
+    [SerializeField]
     GameObject helpPromptGO;
+    [SerializeField]
+    Text objectiveText;
+    [SerializeField]
+    Text scoreText;
 
     Aircraft aircraft;
     Transform aircraftTransform;
@@ -56,11 +61,17 @@ public class AircraftHUD : MonoBehaviour
     Image targetBoxImage;
     GameObject pauseTextGO;
     GameObject respawnTextGO;
+    GameObject scoreGO;
 
     float lastUpdateTime;
 
     const float metersToKnots = 1.94384f;
     const float metersToFeet = 3.28084f;
+
+    const string objective1 = "Take Off";
+    const string objective2 = "Eliminate Hostiles";
+    const string objective3 = "Land";
+    private float timer = 300f;
 
     void Start()
     {
@@ -70,6 +81,7 @@ public class AircraftHUD : MonoBehaviour
         targetBoxImage = targetBox.GetComponent<Image>();
         pauseTextGO = pauseText.gameObject;
         respawnTextGO = respawnText.gameObject;
+        scoreGO = scoreText.gameObject;
     }
 
     public void SetAircraft(Aircraft aircraft)
@@ -251,6 +263,43 @@ public class AircraftHUD : MonoBehaviour
         }
     }
 
+    void UpdateObjective()
+    {
+        if (aircraft.objectiveID == 0)
+        {
+            objectiveText.text = objective1;
+        }
+        if (aircraft.objectiveID == 1)
+        {
+            objectiveText.text = objective2;
+        }
+        if (aircraft.objectiveID == 2)
+        {
+            objectiveText.text = objective3;
+        }
+    }
+
+    void UpdateScore()
+    {
+        if (aircraft.objectiveID != 1)
+        {
+            scoreGO.SetActive(false);
+        }
+        else
+        {
+            if (timer <= 0f)
+            {
+                aircraft.objectiveID = 2;
+                return;
+            }
+            scoreGO.SetActive(true);
+            int minute = (int)(timer / 60f);
+            int second = (int)(timer % 60f);
+            scoreText.text = "Remaining Time: " + minute.ToString() + ":" + second.ToString() + "\n" + "Your Score: " + aircraft.score.ToString();
+            timer -= Time.deltaTime;
+        }
+    }
+
     void LateUpdate()
     {
         if (aircraft == null) return;
@@ -275,6 +324,8 @@ public class AircraftHUD : MonoBehaviour
         UpdateWeapon();
         UpdatePause();
         UpdateRespawn();
+        UpdateObjective();
+        UpdateScore();
 
         //update these elements at reduced rate to make reading them easier
         if (Time.time > lastUpdateTime + (1f / updateRate))

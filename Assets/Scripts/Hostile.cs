@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,17 +10,17 @@ public class Hostile : MonoBehaviour
     Aircraft aircraft;
     [SerializeField]
     float maxDistance = 2000f;
-    [SerializeField] 
+    [SerializeField]
     GameObject intactObject;
     [SerializeField]
     GameObject shatteredObject;
     [SerializeField]
     private float maxHealth;
-    [SerializeField] 
-    public float point;
+    [SerializeField]
+    public int point;
 
     public float health { get; set; }
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -48,6 +48,10 @@ public class Hostile : MonoBehaviour
                     rfr.Demolish();
                     Destroy(this.gameObject);
                     aircraft.target = null;
+                }
+                if (aircraft.objectiveID == 1)
+                {
+                    aircraft.score += point;
                 }
             }
             else
