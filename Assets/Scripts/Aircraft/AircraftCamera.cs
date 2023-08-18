@@ -28,6 +28,8 @@ public class AircraftCamera : MonoBehaviour
     private float mouseSensitivity = 50.0f;
     [SerializeField]
     float mouseStopThreshold = 1.0f;
+    [SerializeField]
+    LayerMask rayCastMask;
 
     private CraftInput craftInput;
     private float distance;
@@ -44,7 +46,7 @@ public class AircraftCamera : MonoBehaviour
     Vector2 lookAverage;
     Vector3 avAverage;
     bool dead;
-    
+
     void Awake()
     {
         cameraTransform = camera.GetComponent<Transform>();
@@ -106,7 +108,7 @@ public class AircraftCamera : MonoBehaviour
         // }
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         if (aircraft == null) return;
         
@@ -114,21 +116,21 @@ public class AircraftCamera : MonoBehaviour
 
         // Attempt 05 Closest one thus far 
         // TODO: Reset camera after releasing mouse
-        if (resetTimer <= mouseStopThreshold)
-        {
-            xAngle += cameraInput.x * mouseSensitivity * Time.deltaTime;
-            yAngle -= cameraInput.y * mouseSensitivity * Time.deltaTime;
+        //if (resetTimer <= mouseStopThreshold)
+        // {
+        xAngle += cameraInput.x * mouseSensitivity * Time.deltaTime;
+        yAngle -= cameraInput.y * mouseSensitivity * Time.deltaTime;
         
-            xAngle = Mathf.Clamp(xAngle, -170f, 170f);
-            yAngle = Mathf.Clamp(yAngle, -80f, 80f);
+        xAngle = Mathf.Clamp(xAngle, -170f, 170f);
+        yAngle = Mathf.Clamp(yAngle, -80f, 80f);
         
-            Quaternion rotation = Quaternion.Euler(yAngle, xAngle, 0f);
-            // Vector3 pos = rotation * new Vector3(0f, 0f, -distance) + aircraft.transform.position;
-            Vector3 pos = rotation * cameraOffset;
-            
-            cameraTransform.localRotation = rotation;
-            cameraTransform.localPosition = pos;
-        }
+        Quaternion rotation = Quaternion.Euler(yAngle, xAngle, 0f);
+        // Vector3 pos = rotation * new Vector3(0f, 0f, -distance) + aircraft.transform.position;
+        Vector3 pos = rotation * cameraOffset;
+        
+        cameraTransform.localRotation = rotation;
+        cameraTransform.localPosition = pos;
+        // }
 
         var tempPos = cameraTransform.position;
         var aircraft2Cam = (cameraTransform.position - aircraft.transform.position).normalized;
@@ -136,16 +138,19 @@ public class AircraftCamera : MonoBehaviour
         RaycastHit[] hits;
         hits = Physics.RaycastAll(ray, cameraOffset.magnitude);
         RaycastHit adjustHit = new RaycastHit();
+        bool flag = false;
         foreach (var hit in hits)
         {
-            if (hit.collider.CompareTag("MainCamera") && hit.collider.CompareTag("Player"))
+            if (!hit.collider.CompareTag("MainCamera") && !hit.collider.CompareTag("Aircraft") && !hit.collider.CompareTag("WindArea"))
             {
                 adjustHit = hit;
+                flag = true;
                 break;
             }
         }
-        if (hits.Length > 1)
+        if (flag)
         {
+            // Debug.Log(hits.Length + " " + adjustHit.transform.gameObject.name + " " + adjustHit.collider.tag + " aaa");
             // Debug.Log(adjustHit.transform.gameObject.name);
             cameraTransform.position = adjustHit.point;
             var dist = (adjustHit.point - aircraft.transform.position).normalized;
@@ -156,6 +161,7 @@ public class AircraftCamera : MonoBehaviour
         }
         else
         {
+            // Debug.Log(hits.Length + " bbb");
             cameraTransform.position = aircraft.transform.position + (tempPos - aircraft.transform.position).normalized * distance;
         }
 

@@ -70,8 +70,10 @@ public class AircraftHUD : MonoBehaviour
 
     const string objective1 = "Take Off";
     const string objective2 = "Eliminate Hostiles";
-    const string objective3 = "Land";
+    const string objective3 = "Touch Down";
+    const string objective4 = "Mission Complete";
     private float timer = 300f;
+    private int finalScore;
 
     void Start()
     {
@@ -228,7 +230,7 @@ public class AircraftHUD : MonoBehaviour
             targetBoxGO.SetActive(false);
         }
 
-        if (aircraft.target != null)
+        if (aircraft.target != null && Vector3.Angle(aircraft.target.transform.position - aircraft.transform.position, aircraft.transform.forward) <= 60f)
         {
             var targetPos = TransformToHUDSpace(aircraft.target.transform.position);
             if (targetPos.z > 0)
@@ -277,15 +279,22 @@ public class AircraftHUD : MonoBehaviour
         {
             objectiveText.text = objective3;
         }
+
+        if (aircraft.objectiveID == 3)
+        {
+            objectiveText.text = objective4;
+        }
     }
 
     void UpdateScore()
     {
-        if (aircraft.objectiveID != 1)
+        if (aircraft.objectiveID != 1 && aircraft.objectiveID != 3)
         {
             scoreGO.SetActive(false);
+            if (aircraft.objectiveID == 2)
+                finalScore = aircraft.score;
         }
-        else
+        if (aircraft.objectiveID == 1)
         {
             if (timer <= 0f)
             {
@@ -297,6 +306,12 @@ public class AircraftHUD : MonoBehaviour
             int second = (int)(timer % 60f);
             scoreText.text = "Remaining Time: " + minute.ToString() + ":" + second.ToString() + "\n" + "Your Score: " + aircraft.score.ToString();
             timer -= Time.deltaTime;
+        }
+
+        if (aircraft.objectiveID == 3)
+        {
+            scoreGO.SetActive(true);
+            scoreText.text = "Your Total Score is: " + finalScore.ToString();
         }
     }
 
@@ -311,17 +326,19 @@ public class AircraftHUD : MonoBehaviour
         {
             UpdateVelocityMarker();
             UpdateHUDCenter();
+            UpdateWeapon();
         }
         else
         {
             hudCenterGO.SetActive(false);
             velocityMarkerGO.SetActive(false);
+            targetBoxGO.SetActive(false);
         }
 
         UpdateAirspeed();
         UpdateAltitude();
         UpdateHealth();
-        UpdateWeapon();
+        
         UpdatePause();
         UpdateRespawn();
         UpdateObjective();

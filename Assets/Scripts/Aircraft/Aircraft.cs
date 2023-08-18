@@ -83,6 +83,8 @@ public class Aircraft : MonoBehaviour
     private AudioSource cannonAudio;
     [SerializeField]
     private AudioSource deadAudio;
+    [SerializeField] 
+    private AudioSource engineAudio;
 
     new AircraftAnimation animation;
 
@@ -93,6 +95,9 @@ public class Aircraft : MonoBehaviour
 
     private float respawnTimer = 0f;
     private Vector3 respawnPoint;
+
+    private float stillAltitude;
+    private float inAirLimitHeight;
 
     // Weapons
     int missileIndex;
@@ -112,6 +117,8 @@ public class Aircraft : MonoBehaviour
 
     PhysicMaterial landingGearDefaultMaterial;
 
+    private bool groundCheck = false;
+    
     public float MaxHealth
     {
         get
@@ -212,6 +219,9 @@ public class Aircraft : MonoBehaviour
         respawnReady = false;
 
         objectiveID = 0;
+
+        respawnPoint = new Vector3(5000f, 2750f, 0f);
+
     }
 
     // Start is called before the first frame update
@@ -238,6 +248,11 @@ public class Aircraft : MonoBehaviour
         // Rb.velocity = Rb.rotation * new Vector3(0, 0, initialSpeed);
 
         cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        
+        stillAltitude = Rb.transform.position.y;
+        inAirLimitHeight = 20f;
+
+        engineAudio.time = 0.1f;
     }
 
     public void SetThrottleInput(float input)
@@ -359,7 +374,7 @@ public class Aircraft : MonoBehaviour
 
     public void Respawn()
     {
-        transform.position = respawnPoint;
+        Rb.position = respawnPoint;
 
         Throttle = maxThrust;
         Dead = false;
@@ -518,6 +533,7 @@ public class Aircraft : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Control input for control surfaces (ailerons, rudders, and elevators)
         if (!CraftController.gamePaused)
         {
             if (elevators != null)
@@ -545,11 +561,29 @@ public class Aircraft : MonoBehaviour
             }
         }
 
-        if (objectiveID == 0 && transform.position.y >= 1470f)
+        // game stage (for HUD mission info update)
+        if (objectiveID == 0 && transform.position.y >= stillAltitude + inAirLimitHeight)
         {
             objectiveID = 1;
         }
+        if (groundCheck && !Dead && Rb.velocity.z <= 0.9f)
+        {
+            objectiveID = 3;
+        }
+        
+        // engine audio
+        if (!engineAudio.isPlaying && Throttle > 0f)
+        {
+            engineAudio.Play();
+            engineAudio.volume = Throttle / 1.0f * 0.1f;
+            engineAudio.SetScheduledEndTime(AudioSettings.dspTime + 0.36f);
+        }
+        else if (engineAudio.isPlaying && Throttle <= 0f)
+        {
+            engineAudio.Pause();
+        }
 
+        // check if there is any hostile in range, if so, lock it
         Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
         Random rnd = new Random();
         // if (hostileObjects.Count != 0) Debug.Log("Hostiles In Range: " + hostileObjects.Count);
@@ -565,6 +599,7 @@ public class Aircraft : MonoBehaviour
             }
         }
 
+        // respawn logic
         if (Dead && !respawnReady)
         {
             respawnTimer += Time.deltaTime;
@@ -643,12 +678,14 @@ public class Aircraft : MonoBehaviour
         {
             var contact = collision.contacts[i];
 
-            if (landingGear.Contains(contact.thisCollider) || collision.collider.CompareTag("Destroyable"))
+            if (landingGear.Contains(contact.thisCollider))
             {
+                if (objectiveID == 2) groundCheck = true;
                 return;
             }
 
             Health = 0;
+            Debug.Log(Dead);
 
             Rb.isKinematic = true;
             Rb.position = contact.point;

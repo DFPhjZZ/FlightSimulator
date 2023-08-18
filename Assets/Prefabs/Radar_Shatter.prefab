@@ -454,7 +454,7 @@ MonoBehaviour:
     byOffset: 0
     byDamage: 250
     byActivator: 0
-    byImpact: 0
+    byImpact: 1
     byConnectivity: 0
     unyielding: 0
     activatable: 0

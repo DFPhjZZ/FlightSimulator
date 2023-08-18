@@ -14246,7 +14246,7 @@ MonoBehaviour:
     needNewMat: 0
   damage:
     enable: 1
-    maxDamage: 400
+    maxDamage: 500
     currentDamage: 0
     collect: 0
     multiplier: 1

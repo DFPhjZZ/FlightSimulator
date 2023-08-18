@@ -6,7 +6,6 @@ using RayFire;
 
 public class Hostile : MonoBehaviour
 {
-    [SerializeField]
     Aircraft aircraft;
     [SerializeField]
     float maxDistance = 2000f;
@@ -14,6 +13,8 @@ public class Hostile : MonoBehaviour
     GameObject intactObject;
     [SerializeField]
     GameObject shatteredObject;
+    [SerializeField] 
+    GameObject audioObject;
     [SerializeField]
     private float maxHealth;
     [SerializeField]
@@ -26,7 +27,7 @@ public class Hostile : MonoBehaviour
     {
         if (aircraft == null)
         {
-            // aircraft = GameObject.FindWithTag("Player").gameObject.GetComponent<Aircraft>();
+            aircraft = GameObject.FindWithTag("Player").gameObject.GetComponent<Aircraft>();
         }
 
         health = maxHealth;
@@ -42,6 +43,8 @@ public class Hostile : MonoBehaviour
                 Destroy(intactObject);
                 shatteredObject.SetActive(true);
                 this.transform.DetachChildren();
+                
+                // RayFire Demolition
                 var rfr = shatteredObject.GetComponent<RayfireRigid>();
                 if (rfr != null)
                 {
@@ -49,6 +52,15 @@ public class Hostile : MonoBehaviour
                     Destroy(this.gameObject);
                     aircraft.target = null;
                 }
+                
+                // Play Demolition Audio
+                var dc = audioObject.GetComponent<AudioControl>();
+                if (dc != null)
+                {
+                    dc.PlaySound();
+                }
+                
+                // Mission Info Update (i.e. score)
                 if (aircraft.objectiveID == 1)
                 {
                     aircraft.score += point;
