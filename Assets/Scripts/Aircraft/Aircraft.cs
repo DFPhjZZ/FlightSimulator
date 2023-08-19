@@ -559,6 +559,18 @@ public class Aircraft : MonoBehaviour
                     rudder.targetDeflection = controlInput.y;
                 }
             }
+
+            // engine audio
+            if (!engineAudio.isPlaying && Throttle > 0f)
+            {
+                engineAudio.Play();
+                engineAudio.volume = Throttle / 1.0f * 0.1f;
+                engineAudio.SetScheduledEndTime(AudioSettings.dspTime + 0.36f);
+            }
+            else if (engineAudio.isPlaying && Throttle <= 0f)
+            {
+                engineAudio.Pause();
+            }
         }
 
         // game stage (for HUD mission info update)
@@ -569,18 +581,6 @@ public class Aircraft : MonoBehaviour
         if (groundCheck && !Dead && LocalVelocity.z <= 0.9f)
         {
             objectiveID = 3;
-        }
-
-        // engine audio
-        if (!engineAudio.isPlaying && Throttle > 0f)
-        {
-            engineAudio.Play();
-            engineAudio.volume = Throttle / 1.0f * 0.1f;
-            engineAudio.SetScheduledEndTime(AudioSettings.dspTime + 0.36f);
-        }
-        else if (engineAudio.isPlaying && Throttle <= 0f)
-        {
-            engineAudio.Pause();
         }
 
         // check if there is any hostile in range, if so, lock it
