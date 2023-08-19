@@ -338,7 +338,7 @@ public class AircraftHUD : MonoBehaviour
         UpdateAirspeed();
         UpdateAltitude();
         UpdateHealth();
-        
+
         UpdatePause();
         UpdateRespawn();
         UpdateObjective();

@@ -83,7 +83,7 @@ public class Aircraft : MonoBehaviour
     private AudioSource cannonAudio;
     [SerializeField]
     private AudioSource deadAudio;
-    [SerializeField] 
+    [SerializeField]
     private AudioSource engineAudio;
 
     new AircraftAnimation animation;
@@ -118,7 +118,7 @@ public class Aircraft : MonoBehaviour
     PhysicMaterial landingGearDefaultMaterial;
 
     private bool groundCheck = false;
-    
+
     public float MaxHealth
     {
         get
@@ -248,7 +248,7 @@ public class Aircraft : MonoBehaviour
         // Rb.velocity = Rb.rotation * new Vector3(0, 0, initialSpeed);
 
         cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-        
+
         stillAltitude = Rb.transform.position.y;
         inAirLimitHeight = 20f;
 
@@ -566,11 +566,11 @@ public class Aircraft : MonoBehaviour
         {
             objectiveID = 1;
         }
-        if (groundCheck && !Dead && Rb.velocity.z <= 0.9f)
+        if (groundCheck && !Dead && LocalVelocity.z <= 0.9f)
         {
             objectiveID = 3;
         }
-        
+
         // engine audio
         if (!engineAudio.isPlaying && Throttle > 0f)
         {

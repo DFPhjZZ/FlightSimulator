@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,7 +24,7 @@ public class AircraftCamera : MonoBehaviour
     float deathSensitivity;
     [SerializeField]
     new Camera camera;
-    [SerializeField] 
+    [SerializeField]
     private float mouseSensitivity = 50.0f;
     [SerializeField]
     float mouseStopThreshold = 1.0f;
@@ -50,7 +50,7 @@ public class AircraftCamera : MonoBehaviour
     void Awake()
     {
         cameraTransform = camera.GetComponent<Transform>();
-        
+
         // craftInput = new CraftInput();
         // craftInput.Aircraft.Camera.performed += ctx=> cameraInput = ctx.ReadValue<Vector2>();
         // craftInput.Aircraft.Camera.canceled += ctx => cameraInput = Vector2.zero;
@@ -111,7 +111,7 @@ public class AircraftCamera : MonoBehaviour
     private void FixedUpdate()
     {
         if (aircraft == null) return;
-        
+
         // Debug.Log(cameraInput);
 
         // Attempt 05 Closest one thus far 
@@ -120,14 +120,14 @@ public class AircraftCamera : MonoBehaviour
         // {
         xAngle += cameraInput.x * mouseSensitivity * Time.deltaTime;
         yAngle -= cameraInput.y * mouseSensitivity * Time.deltaTime;
-        
+
         xAngle = Mathf.Clamp(xAngle, -170f, 170f);
         yAngle = Mathf.Clamp(yAngle, -80f, 80f);
-        
+
         Quaternion rotation = Quaternion.Euler(yAngle, xAngle, 0f);
         // Vector3 pos = rotation * new Vector3(0f, 0f, -distance) + aircraft.transform.position;
         Vector3 pos = rotation * cameraOffset;
-        
+
         cameraTransform.localRotation = rotation;
         cameraTransform.localPosition = pos;
         // }
@@ -136,7 +136,7 @@ public class AircraftCamera : MonoBehaviour
         var aircraft2Cam = (cameraTransform.position - aircraft.transform.position).normalized;
         Ray ray = new Ray(aircraft.transform.position, aircraft2Cam);
         RaycastHit[] hits;
-        hits = Physics.RaycastAll(ray, cameraOffset.magnitude);
+        hits = Physics.RaycastAll(ray, cameraOffset.magnitude, rayCastMask.value);
         RaycastHit adjustHit = new RaycastHit();
         bool flag = false;
         foreach (var hit in hits)
